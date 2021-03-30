@@ -1,0 +1,686 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(54, 53, 54);
+}
+
+#titlebar {
+    display: block;
+    position: fixed;
+    height: 25px;
+    width: 100%;
+    background: rgb(43, 42, 43);
+    user-select: none;
+    z-index: 5;
+    /* display: none; */
+}
+
+#titlebar #drag-region {
+    width: 100%;
+    height: 100%;
+    -webkit-app-region: drag;
+}
+
+#titlebar {
+    color: #FFF;
+  }
+  
+#window-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 46px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+}
+
+#window-controls .button {
+    grid-row: 1 / span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+#min-button {
+    grid-column: 1;
+}
+#max-button, #restore-button {
+    grid-column: 2;
+}
+#close-button {
+    grid-column: 3;
+}
+
+@media (-webkit-device-pixel-ratio: 1.5), (device-pixel-ratio: 1.5),
+(-webkit-device-pixel-ratio: 2), (device-pixel-ratio: 2),
+(-webkit-device-pixel-ratio: 3), (device-pixel-ratio: 3) {
+  #window-controls .icon {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+#window-controls {
+    -webkit-app-region: no-drag;
+}
+
+#window-controls .button {
+    user-select: none;
+}
+#window-controls .button:hover {
+    background: rgba(255,255,255,0.1);
+}
+#window-controls .button:active {
+    background: rgba(255,255,255,0.2);
+}
+
+#close-button:hover {
+    background: #E81123 !important;
+}
+#close-button:active {
+    background: #F1707A !important;
+}
+#close-button:active .icon {
+    filter: invert(1);
+}
+
+#restore-button {
+    display: none !important;
+}
+
+#titlebar #drag-region {
+    display: grid;
+    grid-template-columns: auto 138px;
+}
+
+#window-title {
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+    overflow: hidden;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 12px;
+}
+
+#window-title span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+
+.maximized #titlebar {
+    width: 100%;
+    padding: 0;
+}
+
+.maximized #window-title {
+    margin-left: 12px;
+}
+
+.maximized #restore-button {
+    display: flex !important;
+}
+
+.maximized #max-button {
+    display: none;
+}
+
+
+#main {
+    height: calc(100% - 32px);
+    margin-top: 32px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.cont {
+    position: absolute;
+    width: 40%;
+    min-width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0px 0px 50px rgba(0, 0, 0, 0.6));
+}
+
+.board {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    -webkit-user-drag: none;
+}
+
+.piece {
+    position: absolute;
+    width: 12.5%;
+    height: 12.5%;
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    cursor: grab;
+    transition: transform .2s;
+}
+
+.piece.grab {
+    cursor: grabbing;
+}
+
+.boards {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+}
+
+.overlay {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    grid-template-rows: repeat(8, auto);
+    grid-auto-flow: row;
+}
+
+.boardbg {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    grid-template-rows: repeat(8, auto);
+    grid-auto-flow: row;
+    z-index: -2;
+}
+
+.file {
+    width: 100%;
+    height: 100%;
+}
+
+.dark {
+    background-color: rgb(172, 125, 88);
+}
+
+.light {
+    background-color: rgb(231, 215, 187);
+}
+
+.selected {
+    background-color: rgba(245, 233, 61, 0.733);
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.content.lastmovestart {
+    background-color: rgba(255, 255, 0, 0.5);
+    z-index: 0;
+}
+
+.content.lastmoveend {
+    background-color: rgba(255, 255, 0, 0.5);
+    z-index: 0;
+}
+
+.content:hover .point {
+    box-shadow:0px 0px 0px 5px rgba(255, 255, 255, 0.7) inset;
+}
+
+.content.view .point {
+    box-shadow:0px 0px 0px 5px rgba(255, 255, 255, 0.7) inset;
+}
+
+.point {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* height: 30%;
+    width: 30%; */
+    /* background-color: rgba(0,0,0,0.15); */
+    /* border-radius: 50%; */
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    width: 100%;height: 100%;
+    background-color: #d16464d7;
+
+}
+
+@keyframes bounce {
+    50% {
+        width: 35%;
+        height: 35%;
+    }
+}
+/* 
+.point.attack {
+    width: 75%;
+    height: 75%;
+    background-color: transparent;
+    border-radius: 50%;
+    border: 10px solid rgba(0,0,0,0.2);
+} */
+
+
+.remove {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+}
+
+.dark-piece {
+    z-index: 4;
+    pointer-events: none;
+}
+
+.br {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/br.png");
+}
+
+.bn {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/bn.png");
+}
+
+.bb {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/bb.png");
+}
+
+.bq {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/bq.png");
+}
+
+.bk {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/bk.png");
+}
+
+.bp {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/bp.png");
+}
+
+.wr {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/wr.png");
+}
+
+.wn {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/wn.png");
+}
+
+.wb {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/wb.png");
+}
+
+.wq {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/wq.png");
+}
+
+.wk {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/wk.png");
+}
+
+.wp {
+    background-image: url("https://images.chesscomfiles.com/chess-themes/pieces/alpha/300/wp.png");
+}
+
+.select {
+    width: 12.5%;
+    height: 50%;
+    z-index: 10;
+    position: absolute;
+    background-color: #F3E8DC;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
+    display: block;
+    animation: select-height .4s;
+    display: none;
+}
+
+.display-normal {
+    display: block;
+}
+
+@keyframes select-height {
+    0% {
+        height: 0;
+    } 100% {
+        height: 50%;
+    }
+}
+
+.select .piece {
+    position: relative;
+    width: 100%;
+    height: 25%;
+}
+
+.select .selector {
+    position: absolute;
+    width: 100%;
+    height: 25%;
+    background-color: #ffffff;
+    top: 0px;
+    z-index: -1;
+    transform: translateY(0);
+    transition: transform .3s;
+}
+
+.select .piece.wq:hover ~ .selector {
+    transform: translateY(0%);
+}
+.select .piece.wr:hover ~ .selector {
+    transform: translateY(100%);
+}
+.select .piece.wb:hover ~ .selector {
+    transform: translateY(200%);
+}
+.select .piece.wn:hover ~ .selector {
+    transform: translateY(300%);
+}
+
+.num {
+    position: relative;
+    text-align: center;
+    line-height: 100%;
+}
+
+.num span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    font-size: 30px;
+}
+
+.noDisp {
+    display: none;
+}
+
+.user {
+    padding: 4px 6px;
+    background-color: rgb(61, 60, 61);
+}
+.user span {
+    color: rgb(221, 221, 221);
+    font-size: 15px;
+    font-family: Rubik;
+    font-weight: 500;
+    transition: color .2s;
+}
+
+/* .user.cur span{
+    color: rgb(223, 223, 223);
+} */
+
+@keyframes cur {
+}
+
+.time {
+    position: absolute;
+    right: 5px;
+    opacity: 0;
+}
+
+.time.low {
+    animation: low 1s infinite;
+}
+
+@keyframes low {
+    50% {
+        color: red;
+    }
+}
+
+.win-loss {
+    width: 460px;
+    height: 370px;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    border-radius: 20px;
+    font-family: "Rubik", sans-serif;
+    box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.win-loss.show {
+    animation: pop-in .3s;
+    pointer-events: all;
+    opacity: 1;
+}
+
+@keyframes pop-in {
+    0% {
+        width: 230px;
+        height: 185px;
+        opacity: 0;
+    }
+    100% {
+        width: 460px;
+        height: 370px;
+        opacity: 1;
+    }
+}
+
+.win-loss .circle {
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    border-radius: 50%;
+    left: 50%;
+    background-color: #626262;
+    transform: translate(-50%, -88%);
+}
+
+.win-loss .who {
+    color: white;
+    font-size: 35px;
+    position: absolute;
+    margin: 40px 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.users {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    color: #868686;
+    font-size: 14px;
+}
+
+.users div {
+    width: 110px;
+    text-align: center;
+}
+
+.users div p {
+    margin: 20px 0px;
+}
+
+.users .score {
+    height: 18px;
+    margin-top: 135px;
+}
+
+.users img {
+    width: 100%;
+}
+
+.win-loss .newgame {
+    color: white;
+    font-size: 18px;
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 20;
+    background: linear-gradient(90deg, #F13612 0%, #F5A318 100%);
+}
+
+.evaluation-bar {
+    width: 25px;
+    height: 100%;
+    position: absolute;
+    background-color: #3D3C3D;
+    transform: translateX(-50px);
+    box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    display: none;
+}
+
+.white {
+    width: 100%;
+    position: absolute;
+    height: 50%;
+    bottom: 0;
+    background-color: white;
+    transition: height .4s;
+}
+
+.noTrans {
+    transition: none;
+}
+
+.github-link {
+    width: 28px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 5px 8px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.github-link img {
+    width: 100%;
+}
+
+.stats-cont {
+    position: absolute;
+    right: calc(100% + 30px);
+    width: 240px;
+    /* height: 340px; */
+    background-color: #363636;
+    font-family: "Rubik", sans-serif;
+    transition: opacity .3s;
+}
+
+.stats-cont .header {
+    width: 100%;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    background-color: #3D3C3D;
+}
+
+.stats-cont .header span {
+    margin: 4px 7px;
+}
+
+.stats-cont .header .close {
+    position: relative;
+    width: 34px;
+    height: 29px;
+    background-color: #E81123;
+    cursor: pointer;
+}
+
+.stats-cont .header .close img {
+    width: 13px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.info {
+    margin: 10px 0px;
+}
+
+.info .container {
+    display: flex;
+    color: white;
+    margin: 4px 0px;
+    justify-content: space-between;
+}
+
+.stats {
+    margin: 4px 10px;
+    background-color: #363636;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+ 
+::-webkit-scrollbar-track {
+    border-radius: 0px 4px 4px 0px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #222222;
+}
+
+.moves-cont {
+    background-color: #424242;
+    margin: 10px 0px;
+    padding: 4px 0px;
+    border-radius: 4px;
+    min-height: 66px;
+    max-height: 239px;
+    overflow-y: scroll;
+    transition: all linear 0.5s;
+}
+
+.moves-cont .row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 5px;
+    padding: 3px 0px;
+    color: white;
+}
+
+.moves-cont .row .move {
+    margin: 2px 2px;
+    padding: 2px 4px;
+    background-color: #363636;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color .3s;
+    user-select: none;
+}
+
+.moves-cont:last-child .row:last-child .move:last-child {
+    background-color: #676767;   
+}
+
+.moves-cont .row .move:hover {
+    background-color: #676767;
+}

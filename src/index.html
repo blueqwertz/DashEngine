@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400&display=swap" rel="stylesheet">
+    <title>Dash Engine</title>
+</head>
+<body>
+    <header id="titlebar">
+        <div id="drag-region">
+            <div id="window-title">
+              <span>Dash Engine - Chess Engine</span>
+            </div>
+            <div id="window-controls">
+              <div class="button" id="min-button">
+                <img class="icon" srcset="icons/min-w-10.png 1x, icons/min-w-12.png 1.25x, icons/min-w-15.png 1.5x, icons/min-w-15.png 1.75x, icons/min-w-20.png 2x, icons/min-w-20.png 2.25x, icons/min-w-24.png 2.5x, icons/min-w-30.png 3x, icons/min-w-30.png 3.5x" draggable="false" />
+              </div>
+        
+              <div class="button" id="max-button">
+                <img class="icon" srcset="icons/max-w-10.png 1x, icons/max-w-12.png 1.25x, icons/max-w-15.png 1.5x, icons/max-w-15.png 1.75x, icons/max-w-20.png 2x, icons/max-w-20.png 2.25x, icons/max-w-24.png 2.5x, icons/max-w-30.png 3x, icons/max-w-30.png 3.5x" draggable="false" />
+              </div>
+        
+              <div class="button" id="restore-button">
+                <img class="icon" srcset="icons/restore-w-10.png 1x, icons/restore-w-12.png 1.25x, icons/restore-w-15.png 1.5x, icons/restore-w-15.png 1.75x, icons/restore-w-20.png 2x, icons/restore-w-20.png 2.25x, icons/restore-w-24.png 2.5x, icons/restore-w-30.png 3x, icons/restore-w-30.png 3.5x" draggable="false" />
+              </div>
+        
+              <div class="button" id="close-button">
+                <img class="icon" srcset="icons/close-w-10.png 1x, icons/close-w-12.png 1.25x, icons/close-w-15.png 1.5x, icons/close-w-15.png 1.75x, icons/close-w-20.png 2x, icons/close-w-20.png 2.25x, icons/close-w-24.png 2.5x, icons/close-w-30.png 3x, icons/close-w-30.png 3.5x" draggable="false" />
+              </div>
+        
+            </div>
+        </div>
+    </header>
+    <div class="win-loss" id="win-loss-cont">
+      <div class="circle"></div>
+      <div class="who" id="win-draw">White Won</div>
+      <div class="users">
+        <div class="you"><img src="icons/user.png" alt=""><p>You</p></div>
+        <div class="score" id="score" id="score">1 - 0</div>
+        <div class="dash"><img src="icon.ico" alt=""><p>Dash Engine</p></div>
+      </div>
+      <div class="newgame" onclick="newGame()">New Game</div>
+    </div>
+    <div class="cont">
+      <div class="stats-cont">
+        <div class="header">
+          <span>Game Info</span><div class="close"><img src="icons/close-w-30.png" alt="" onclick="this.parentElement.parentElement.parentElement.style.opacity = '0'"></div>
+        </div>
+        <div class="stats">
+          <div class="info">
+            <div class="container">
+              <div class="depth">Depth:</div><span id="depth">-</span>
+            </div>
+            <div class="container">
+              <div class="eval">Eval:</div><span id="evaldisp">-</span>
+            </div>
+            <div class="container">
+              <div class="eval">Version:</div><span id="version"></span>
+            </div>
+          </div>
+          <div class="moves-cont" id="moves">
+          </div>
+        </div>
+      </div>
+      <div class="evaluation-bar">
+        <div class="white" id="eval"></div>
+      </div>
+        <div class="user" id="user-black"><span>Dash Engine</span><span class="time" id="time-black">5:00</span></div>
+        <div class="boards">
+            <div class="boardbg" id="boardbg"></div>
+            <div class="overlay" id="points"></div>
+            <div class="board" id="board"></div>
+            <div class="select" id="select">
+              <div class="piece wq"></div>
+              <div class="piece wr"></div>
+              <div class="piece wb"></div>
+              <div class="piece wn"></div>
+              <div class="selector"></div>
+            </div>
+        </div>
+        <div class="user cur" id="user-white"><span>You</span><span class="time" id="time-white">5:00</span></div>
+    </div>
+    <div class="github-link" id="github" title="GitHub Repository"><img src="icons/github.png" alt=""></div>
+</body>
+<script src="js/move.js"></script>
+<script src="js/zobristHashing.js"></script>
+<script src="js/transpositionTable.js"></script>
+<script src="js/minimax.js"></script>
+<script src="js/piece.js"></script>
+<script src="js/openingsData.js"></script>
+<script src="js/openingMoves.js"></script>
+<script src="js/board.js"></script>
+<script src="js/dashengine.js"></script>
+<script src="js/drawboard.js"></script>
+</html>

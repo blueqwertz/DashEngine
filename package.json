@@ -1,8 +1,8 @@
 {
   "name": "dashengine-electron",
   "productName": "DashEngine",
-  "version": "1.0.1",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Chess Engine",
   "main": "src/index.js",
   "repository": {
     "type": "git",

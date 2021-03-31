@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain} = require('electron');
+const { app, BrowserWindow, ipcMain, ipcRenderer} = require('electron');
 const path = require('path');
 const nativeImage = require('electron').nativeImage;
 var image = nativeImage.createFromPath(__dirname + '/icon.ico');
@@ -57,7 +57,6 @@ const createLoadingScreen = () => {
   loadingScreen.setResizable(false);
   loadingScreen.loadFile(path.join(__dirname, 'loading.html'));
   loadingScreen.on('closed', () => (loadingScreen = null))
-  loadingScreen.toggleDevTools();
 };
 
 app.on('window-all-closed', () => {
@@ -66,10 +65,10 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('ready', createLoadingScreen)
+ipcMain.on("version", (event) => {
+  event.sender.send('app_version', { version: app.getVersion() })
+})
 
-ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
-});
+app.on('ready', createLoadingScreen)
 
 ipcMain.on('start_app', createWindow);

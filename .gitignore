@@ -39,6 +39,7 @@ py/
 .vscode/
 dist/
 TimsRandomProjects/
+out/
 
 # TypeScript v1 declaration files
 typings/

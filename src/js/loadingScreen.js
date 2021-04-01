@@ -28,10 +28,10 @@ document.onreadystatechange = async function() {
 
         let updateAvailabe = await uaup.CheckForUpdates(updateOptions)
 
-        // if (updateAvailabe == false) {
-        //     ipcRenderer.send("start_app")
-        // } else {
-        //     uaup.Update(updateOptions)
-        // }
+        if (updateAvailabe == false) {
+            ipcRenderer.send("start_app")
+        } else {
+            uaup.Update(updateOptions)
+        }
       }
 }

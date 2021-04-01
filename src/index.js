@@ -54,7 +54,6 @@ const createLoadingScreen = () => {
     })
   );
   loadingScreen.setMenu(null);
-  loadingScreen.webContents.openDevTools()
   loadingScreen.setResizable(false);
   loadingScreen.loadFile(path.join(__dirname, 'loading.html'));
   loadingScreen.on('closed', () => (loadingScreen = null))

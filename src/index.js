@@ -53,6 +53,7 @@ const createLoadingScreen = () => {
       }
     })
   );
+  loadingScreen.webContents.openDevTools()
   loadingScreen.setMenu(null);
   loadingScreen.setResizable(false);
   loadingScreen.loadFile(path.join(__dirname, 'loading.html'));

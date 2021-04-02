@@ -12,12 +12,12 @@ const createWindow = () => {
     icon: image,
     frame: false,
     show: false,
-    backgroundColor: '#fff',
+    backgroundColor: '#363536',
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
       nodeIntegrationInWorker: true,
-      preload: `${__dirname}/js/nodestuff.js`
+      preload: `${__dirname}/electron/nodestuff.js`
     }
   });
 
@@ -30,9 +30,9 @@ const createWindow = () => {
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-  mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.show();
-  });
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
 };
 
 var loadingScreen;
@@ -49,7 +49,7 @@ const createLoadingScreen = () => {
         nodeIntegration: true,
         enableRemoteModule: true,
         nodeIntegrationInWorker: true,
-        preload: `${__dirname}/js/loadingScreen.js`
+        preload: `${__dirname}/electron/loadingScreen.js`
       }
     })
   );

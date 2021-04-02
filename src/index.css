@@ -550,7 +550,6 @@ body {
     transform: translateX(-50px);
     box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
     overflow: hidden;
-    display: none;
 }
 
 .white {
@@ -559,7 +558,7 @@ body {
     height: 50%;
     bottom: 0;
     background-color: white;
-    transition: height .4s;
+    transition: height .2s;
 }
 
 .noTrans {
@@ -582,7 +581,7 @@ body {
 
 .stats-cont {
     position: absolute;
-    right: calc(100% + 30px);
+    right: calc(100% + 75px);
     width: 240px;
     /* height: 340px; */
     background-color: #363636;

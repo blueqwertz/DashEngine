@@ -26,6 +26,13 @@ document.onreadystatechange = async function() {
         
         const uaup = require('uaup-js');
 
+        const isPackaged = require('electron-is-packaged').isPackaged;
+
+        if (!isPackaged) {
+            ipcRenderer.send("start_app")
+            return
+        }
+
         let updateAvailabe = await uaup.CheckForUpdates(updateOptions)
 
         if (updateAvailabe == false) {

@@ -6,8 +6,8 @@ let searchTime = 1000
 
 let searchDepth = 6
 
-var moveSound = new Audio("./move.mp3")
-let captureSound = new Audio("./capture.mp3")
+var moveSound = new Audio("./sounds/move.mp3")
+let captureSound = new Audio("./sounds/capture.mp3")
 
 function setupBoard() {
     divoverlay.innerHTML = ""
@@ -39,7 +39,7 @@ function setupBoard() {
 
 let curmoves = []
 
-let z_index = 2
+let z_index = 5
 
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -245,14 +245,6 @@ function updateTime() {
             gameOver = true
             timer = null
         }
-        curScore = Evaluate() / 7
-        if (isNaN(curScore)) {
-            document.getElementById("win-draw").innerHTML = "Draw"
-            document.getElementById("win-draw-cont").classList.add("show")
-            gameOver = true
-        }
-        ycoord = curScore * 5
-        document.getElementById("eval").style.height = 50 - ycoord + "%"
         let now = new Date()
         let timepassed = (now - lasttimestart) / 1000
         if (board.col == 1) {
@@ -300,6 +292,7 @@ async function makedisplaymove(ind) {
     }
     removeSel()
     let move = curmoves[ind]
+    console.log(move)
     if (move.promotionType != null && board.col == 1) {
         let promTypes = [5, 2, 4, 3]
         move.promotionType = promTypes[await choosePromotion(move.startSq % 8)]

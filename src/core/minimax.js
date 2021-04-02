@@ -27,11 +27,13 @@ async function Deepening(time, view=true) {
 
 function updateEvalDepthDisp(eval, depth) {
     return new Promise((resolve) => {
-        let x = 0
-        // document.getElementById("evaldisp").innerHTML = Math.round(eval * 110) / 1100 * -1
+        document.getElementById("evaldisp").innerHTML = Math.round((eval / 7) * -10) / 10
+        document.getElementById("eval").style.height = 50 - (eval / 7) + "%"
         document.getElementById("depth").innerHTML = depth
         setTimeout(function() {
-            resolve(x)
+            setTimeout(() => {
+                resolve(x)
+            }, 100)
         }, 10)
     })
 }
@@ -178,7 +180,7 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
 
         var ttEntry = tt.lookup(board.hash)
         if (ttEntry != null) {
-            if (ttEntry[1] <= depth) {
+            if (ttEntry[1] >= plyFromRoot) {
                 return ttEntry[0]
             }
         }
@@ -213,7 +215,7 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
                 }
                 maxeval = Math.max(eval, maxeval)
             }
-            tt.store(board.hash, maxeval, depth)
+            tt.store(board.hash, maxeval, plyFromRoot)
             return maxeval
         } else {
             if (moves.length == 0) {
@@ -235,7 +237,7 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
                 }
                 mineval = Math.min(eval, mineval)
             }
-            tt.store(board.hash, mineval, depth)
+            tt.store(board.hash, mineval, plyFromRoot)
             return mineval
         }
     }
@@ -248,6 +250,9 @@ function Evaluate() {
 
     let whiteEval = 0
     let blackEval = 0
+
+    var whitePawn = 0
+    var blackPawn = 0
 
     let whiteMaterial = countMaterial(1)
     let blackMaterial = countMaterial(0)
@@ -262,15 +267,12 @@ function Evaluate() {
     }
 
     if (whiteOnlyKing && blackOnlyKing) {
-        return 0
+        return NaN
     }
-
-    var whitePawn = 0
-    var blackPawn = 0
 
     let whiteWithoutPawns = whiteMaterial - whitePawn
     let blackWithouthPawns = blackMaterial - blackPawn
-
+    
     let whiteEndGameWeight = EndgameWeight(whiteWithoutPawns)
     let blackEndGameWeight = EndgameWeight(blackWithouthPawns)
 
@@ -279,8 +281,8 @@ function Evaluate() {
     whiteEval += forceKingToEdge(whiteMaterial, blackMaterial, blackEndGameWeight, true)
     blackEval += forceKingToEdge(blackMaterial, whiteMaterial, whiteEndGameWeight, false)
 
-    whiteEval += pieceSqaureTableEval(1)
-    blackEval += pieceSqaureTableEval(0)
+    whiteEval += pieceSqaureTableEval(1, whiteEndGameWeight)
+    blackEval += pieceSqaureTableEval(0, blackEndGameWeight)
 
     function countMaterial (col) {
         let material = 0
@@ -333,20 +335,18 @@ function Evaluate() {
         return eval * endgameWeight
     }
 
-    function pieceSqaureTableEval(col) {
+    function pieceSqaureTableEval(col, endgameWeight) {
         let extra = 0
         for (let p of board.pos) {
             if (p != null && p.col == col) {
-                let x = p.pos % 8
-                let y = 7 - Math.floor(p.pos / 8)
                 if (col == 0) {
-                    extra += pieceSqaureTablesBlack[p.type - 1][y][x]
+                    extra += pieceSqaureTablesBlack[p.type - 1][p.pos]
                 } else {
-                    extra += pieceSqaureTablesWhite[p.type - 1][y][x]
+                    extra += pieceSqaureTablesWhite[p.type - 1][p.pos]
                 }
             }
         }
-        return extra
+        return extra * (1 + endgameWeight / 2)
     }
 
     return blackEval - whiteEval
@@ -372,72 +372,71 @@ function checkDraw() {
     return false
 }
 
-let scores = [10, 50, 29, 31, 90, 0]
+let scores = [128, 1276, 781, 825, 2538, 0]
 
-let pieceSqaureTablesWhite = [[
-    [0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
-    [5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0],
-    [1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0],
-    [0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5],
-    [0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0],
-    [0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5],
-    [0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5],
-    [0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0]
-],
-[
-    [  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
-    [  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5],
-    [ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
-    [ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
-    [ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
-    [ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
-    [ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
-    [  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0]
-],
-[
-    [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-    [-4.0, -2.0,  0.0,  0.0,  0.0,  0.0, -2.0, -4.0],
-    [-3.0,  0.0,  1.0,  1.5,  1.5,  1.0,  0.0, -3.0],
-    [-3.0,  0.5,  1.5,  2.0,  2.0,  1.5,  0.5, -3.0],
-    [-3.0,  0.0,  1.5,  2.0,  2.0,  1.5,  0.0, -3.0],
-    [-3.0,  0.5,  1.0,  1.5,  1.5,  1.0,  0.5, -3.0],
-    [-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0],
-    [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
-],
-[
-    [ -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
-    [ -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
-    [ -1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0],
-    [ -1.0,  0.5,  0.5,  1.0,  1.0,  0.5,  0.5, -1.0],
-    [ -1.0,  0.0,  1.0,  1.0,  1.0,  1.0,  0.0, -1.0],
-    [ -1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0],
-    [ -1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0],
-    [ -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
-],
-[
-    [ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
-    [ -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
-    [ -1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0],
-    [ -0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5],
-    [  0.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5],
-    [ -1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0],
-    [ -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0],
-    [ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
-],
-[
-
-    [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [ -2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
-    [ -1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-    [  2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0 ],
-    [  2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 ]
-]
+let pieceSqaureTablesBlack = [
+    [
+        0, 0, 0, 0, 0, 0, 0, 0,
+        -25, 105, 135, 270, 270, 135, 105, -25,
+        -80, 0, 30, 176, 176, 30, 0, -80,
+        -85, -5, 25, 175, 175, 25, -5, -85,
+        -90, -10, 20, 125, 125, 20, -10, -90,
+        -95, -15, 15, 75, 75, 15, -15, -95, 
+        -100, -20, 10, 70, 70, 10, -20, -100,
+        0, 0, 0, 0, 0, 0, 0, 0
+    ],
+    [ -60, -30, -10, 20, 20, -10, -30, -60,
+        40,  70,  90,120,120,  90,  70,  40,
+       -60, -30, -10, 20, 20, -10, -30, -60,
+       -60, -30, -10, 20, 20, -10, -30, -60,
+       -60, -30, -10, 20, 20, -10, -30, -60,
+       -60, -30, -10, 20, 20, -10, -30, -60,
+       -60, -30, -10, 20, 20, -10, -30, -60,
+       -60, -30, -10, 20, 20, -10, -30, -60
+    ],
+    [-200, -100, -50, -50, -50, -50, -100, -200,
+        -100, 0, 0, 0, 0, 0, 0, -100,
+        -50, 0, 60, 60, 60, 60, 0, -50,
+        -50, 0, 30, 60, 60, 30, 0, -50,
+        -50, 0, 30, 60, 60, 30, 0, -50,
+        -50, 0, 30, 30, 30, 30, 0, -50,
+        -100, 0, 0, 0, 0, 0, 0, -100,
+        -200, -50, -25, -25, -25, -25, -50, -200
+    ],
+    [ -50,-50,-25,-10,-10,-25,-50,-50,
+        -50,-25,-10,  0,  0,-10,-25,-50,
+        -25,-10,  0, 25, 25,  0,-10,-25,
+        -10,  0, 25, 40, 40, 25,  0,-10,
+        -10,  0, 25, 40, 40, 25,  0,-10,
+        -25,-10,  0, 25, 25,  0,-10,-25,
+        -50,-25,-10,  0,  0,-10,-25,-50,
+        -50,-50,-25,-10,-10,-25,-50,-50
+    ],
+    [0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+    ],
+    [  50, 150, -25, -125, -125, -25, 150, 50,
+        50, 150, -25, -125, -125, -25, 150, 50,
+        50, 150, -25, -125, -125, -25, 150, 50,
+        50, 150, -25, -125, -125, -25, 150, 50,
+        50, 150, -25, -125, -125, -25, 150, 50,
+        50, 150, -25, -125, -125, -25, 150, 50,
+        50, 150, -25, -125, -125, -25, 150, 50,
+       150, 250, 75, -25, -25, 75, 250, 150
+    ]
 ]
 
-var pieceSqaureTablesBlack = []
+var pieceSqaureTablesWhite = []
+
+for (let arr of pieceSqaureTablesBlack) {
+    pieceSqaureTablesWhite.push(arr.slice().reverse())
+}
 
 function getPieceScore(p) {
     let x = p.pos % 8

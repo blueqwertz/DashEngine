@@ -1,7 +1,3 @@
-for (let arr of pieceSqaureTablesWhite) {
-    pieceSqaureTablesBlack.push(arr.slice().reverse())
-}
-
 function getLookup(type, col) {
     return col == 1 ? lookup[type - 1] : lookup[type - 1].toLowerCase()
 }
@@ -80,7 +76,7 @@ function print_bitarr(arr) {
 let movegenerator = new MoveGenerator()
 
 var board = new Board()
-let testFen = "8/2K5/8/8/8/5Q2/3Q4/1k6 w - - 0 1"
+let testFen = "r3kbnr/ppp2ppp/2n5/4p3/2Bq4/2N2P2/PPP2P1P/R1BQ1K2 w kq -"
 board.setup()
 // board.setFen(testFen)
 

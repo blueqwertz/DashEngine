@@ -16,7 +16,7 @@ async function searchMoves(movesPlayed) {
                 return moveToRealMove(openingMove[movesPlayed.length])
             }
         }
-    } 
+    }
     for (let i = 0; i < openings.length; i++) {
         let openingMove = openings[i]
         let have2break = false

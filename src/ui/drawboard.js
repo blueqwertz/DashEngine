@@ -1,8 +1,9 @@
 let divboard = document.getElementById("board")
 let divoverlay = document.getElementById("points")
+let lastMovesDiv = document.getElementById("lastMoves")
 
 
-let searchTime = 1000
+let searchTime = 2000
 
 let searchDepth = 6
 
@@ -25,7 +26,7 @@ function setupBoard() {
             let colcode = board.pos[x + y * 8].col == 1 ? "w" : "b"
             let piececode = getLookup(board.pos[x + y * 8].type, board.pos[x + y * 8].col).toLowerCase()
             let code = colcode + piececode
-            divboard.innerHTML += `<div class="piece ${code}" id="${x + y * 8}" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
+            divboard.innerHTML += `<div class="piece ${code} check" id="${x + y * 8}" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
         }
     }
     for (let el of divboard.children) {
@@ -128,7 +129,6 @@ function dragElement(elmnt) {
         let found = false
         for (let i in curmoves) {
             if (curmoves[i].endSq == ind) {
-                console.log(curmoves[i])
                 makedisplaymove(i)
                 found = true
                 break
@@ -197,6 +197,7 @@ function newGame() {
     document.getElementById("time-white").innerHTML = minutes + ":" + seconds
     document.getElementById("time-black").innerHTML = minutes + ":" + seconds
     document.getElementById("win-loss-cont").classList.remove("show")
+    lastMovesDiv.innerHTML = ""
     document.getElementById("moves").innerHTML = ""
     document.getElementById("depth").innerHTML = "-"
     document.getElementById("evaldisp").innerHTML = "-"
@@ -283,7 +284,11 @@ function makeFull(x) {
     } return x
 }
 
-async function makedisplaymove(ind) {
+async function makedisplaymove(ind, show=false) {
+    if (!isBack) {
+        return
+    }
+    lastMovesDiv.innerHTML = ""
     board.movesMade += 1/2
     if (timer == null) {
         timer = setInterval(function () {
@@ -292,7 +297,7 @@ async function makedisplaymove(ind) {
     }
     removeSel()
     let move = curmoves[ind]
-    console.log(move)
+    board.movesHistory.push(move)
     if (move.promotionType != null && board.col == 1) {
         let promTypes = [5, 2, 4, 3]
         move.promotionType = promTypes[await choosePromotion(move.startSq % 8)]
@@ -320,7 +325,7 @@ async function makedisplaymove(ind) {
     if (movesMade % 2 == 0) {
         document.getElementById("moves").innerHTML += `<div class="row" id="m${movesMade / 2}"></div>`
     }
-    document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move'>" + convertToPgn(move) +"</div>"
+    document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move' onclick='goBack(" + (movesMade+1) + ")'>" + convertToPgn(move) +"</div>"
 
     var objDiv = document.getElementById("moves");
     objDiv.scrollTop = objDiv.scrollHeight;
@@ -343,10 +348,10 @@ async function makedisplaymove(ind) {
     divoverlay.innerHTML = ""
     if (board.pos[move.endSq] != null) {
         document.getElementById(move.endSq).classList.add("remove")
-        document.getElementById(move.endSq).id = null
+        document.getElementById(move.endSq).id = "r" + move.endSq
     } if (move.enPassant != null) {
         document.getElementById(move.enPassant.pos).classList.add("remove")
-        document.getElementById(move.enPassant.pos).id = null
+        document.getElementById(move.enPassant.pos).id = "r" + move.enPassant
     } if (move.castle != null) {
         let x = move.castle[1] % 8
         let y = Math.floor(move.castle[1] / 8)
@@ -356,33 +361,95 @@ async function makedisplaymove(ind) {
     board.makeMove(move)
     let x = move.endSq % 8
     let y = Math.floor(move.endSq / 8)
-    divoverlay.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
-    divoverlay.innerHTML += `<div class="content lastmovestart" style="transform: translate(${(move.startSq % 8 - 1) * 100}%, ${(7 - (Math.floor(move.startSq / 8))) * 100}%)"></div>`
+    lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
+    lastMovesDiv.innerHTML += `<div class="content lastmovestart" style="transform: translate(${(move.startSq % 8 - 1) * 100}%, ${(7 - (Math.floor(move.startSq / 8))) * 100}%)"></div>`
     document.getElementById(move.startSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
     document.getElementById(move.startSq).id = move.endSq
 
-    setTimeout(function() {
-        if (board.col == 0) {
-            if (!gameOver) {
-                if (board.movesMade < 5) {
-                    let bestMove = searchMoves(board.moves)
-                    bestMove.then(move => {
-                        curmoves = [move]
-                        makedisplaymove(0)
-                    })
-                }
-                else {
-                    let bestMove = Deepening(searchTime)
-                    if (bestMove != null) {
+    if (!show) {
+        setTimeout(function() {
+            if (board.col == 0) {
+                if (!gameOver) {
+                    if (board.movesMade < 5) {
+                        let bestMove = searchMoves(board.moves)
                         bestMove.then(move => {
                             curmoves = [move]
                             makedisplaymove(0)
                         })
                     }
+                    else {
+                        let bestMove = Deepening(searchTime)
+                        if (bestMove != null) {
+                            bestMove.then(move => {
+                                curmoves = [move]
+                                makedisplaymove(0)
+                            })
+                        }
+                    }
                 }
             }
-        }
-    }, 200)
+        }, 200)
+    }
+}
+
+
+function backToNormal() {
+    isBack = true
+    while (movesBack.length > 0) {
+        let move = movesBack.shift()
+        console.log(move)
+        curmoves = [move]
+        makedisplaymove(0, true)
+    }
+    document.getElementById("return").classList.remove("show")
+}
+
+let isBack = true
+let movesBack = []
+
+function goBack(numMoves) {
+    isBack = false
+    let tempMovesMade = movesMade
+    for (let i = 0; i <= tempMovesMade - numMoves; i++) {
+        movesMade--
+        unmakedisplaymove()
+    }
+    document.getElementById("return").classList.add("show")
+}
+
+function unmakedisplaymove() {
+    if (board.movesHistory.length < 1) {
+        return false
+    }
+    
+    lastMovesDiv.innerHTML = ""
+
+    movesBack.push(board.movesHistory[board.movesHistory.length - 1])
+    let move = board.movesHistory.pop()
+
+    board.unmakeMove(move)
+
+    divoverlay.innerHTML = ""
+    if (board.pos[move.endSq] != null) {
+        document.getElementById("r" + move.endSq).classList.remove("remove")
+        document.getElementById("r" + move.endSq).id = move.endSq
+    } if (move.enPassant != null) {
+        document.getElementById("r" + move.enPassant.pos).classList.remove("remove")
+        document.getElementById("r" + move.enPassant.pos).id = move.enPassant.pos
+    } if (move.castle != null) {
+        let x = move.castle[0] % 8
+        let y = Math.floor(move.castle[0] / 8)
+        document.getElementById(move.castle[1]).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
+        document.getElementById(move.castle[1]).id = move.castle[0]
+    }
+    let x = move.startSq % 8
+    let y = Math.floor(move.startSq / 8)
+    lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
+    lastMovesDiv.innerHTML += `<div class="content lastmovestart" style="transform: translate(${(move.endSq % 8 - 1) * 100}%, ${(7 - (Math.floor(move.endSq / 8))) * 100}%)"></div>`
+    console.log(~~(movesMade/2))
+    document.getElementById("m" + ~~(movesMade/2)).children[movesMade % 2].outerHTML = ""
+    document.getElementById(move.endSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
+    document.getElementById(move.endSq).id = move.startSq
 }
 
 function removeSel() {
@@ -400,51 +467,61 @@ function convertToPgn(move) {
         } return "O-O"
     }
 
-    let pieceType = board.pos[move.startSq].type
+    let startPieceType = getLookup(board.pos[move.startSq].type, 1)
+    let capturePieceType
+    if (move.attack != null) {
+        capturePieceType = getLookup(move.attack.type, 1)
+    }
 
-    let moveNotation = ""
+    
+    let result = ""
+    //      F I L E
+    // R
+    // A
+    // N
+    // K
+    if (startPieceType != "P" && startPieceType != "K") {
+        let moves = movegenerator.generateMoves()
+        for (let posMove of moves) {
+            if (posMove.startSq != move.startSq && posMove.endSq == move.endSq) {
+                if (startPieceType == board.pos[posMove.startSq].type) {
+                    let fromFile = move.startSq % 8
+                    let altFromFile = ~~(posMove.startSq / 8) + 1
 
-    if (pieceType != 1 && pieceType != 5) {
-        var allMoves = movegenerator.generateMoves()
-
-        for (let altMove of allMoves) {
-            if (altMove.startSq != move.startSq && altMove.endSq == move.endSq) {
-                moveNotation = lookup[pieceType - 1]
-                if (board.pos[altMove.startSq].type == pieceType) {
-                    let fromFile = Math.floor(move.startSq / 8) + 1
-                    let altFromFile = Math.floor(altMove.startSq / 8) + 1
-                    let fromRank = move.startSq % 8 - 1
-                    let altFromRank = altMove.startSq % 8 - 1
+                    let fromRank = move.startSq % 8
+                    let altFromRank = ~~(posMove.startSq / 8) + 1
 
                     if (fromFile != altFromFile) {
-                        moveNotation += fromFile
+                        result += let[fromFile]
                         break
-                    } else if (fromRank != altFromRank) {
-                        moveNotation += let[fromRank]
+                    } if (fromRank != altFromRank) {
+                        result += altFromRank
                         break
                     }
+                } else {
+                    result += startPieceType
+                    break
                 }
             }
         }
     }
 
-    if (move.attack) {
-        let caputrePieceType = move.attack.type
-        if (caputrePieceType == 1) {
-            moveNotation += let[move.startSq % 8]
+    if (capturePieceType) {
+        if (startPieceType == "P") {
+            result += let[move.startSq % 8]
         }
-        moveNotation += "x"
-    } else {
-        if (move.enPassant != null) {
-            moveNotation += let[move.startSq % 8] + "x"
-        }
+        result += "x"
+    }  if (move.enPassant) {
+        result += let[move.startSq % 8] + "x"
     }
 
-    moveNotation += let[move.endSq % 8]
-    moveNotation += Math.floor(move.endSq / 8) + 1
+    result += let[move.endSq % 8]
+    result += ~~(move.endSq / 8) + 1
 
-    if (move.promotionType != null) {
-        moveNotation += "=" + lookup[move.promotionType - 1]
+    if (move.promotionType) {
+        result += "=" + getLookup(move.promotionType, 1)
     }
-    return moveNotation
+
+    return result
+
 }

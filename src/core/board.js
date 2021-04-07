@@ -8,7 +8,8 @@ class Board {
         this.kingBlack = null
         this.checkMate = false
         this.movesMade = 0
-        this.moves = []
+        this.moves = new Array()
+        this.movesHistory = new Array()
         this.hash = 0
         this.history = new Array()
     }

@@ -1,4 +1,4 @@
-async function Deepening(time, view=true) {
+async function Deepening(time, view=false) {
     totalNodes = 0
     let bestMove = null
     let bestScore = -99999
@@ -27,13 +27,11 @@ async function Deepening(time, view=true) {
 
 function updateEvalDepthDisp(eval, depth) {
     return new Promise((resolve) => {
-        document.getElementById("evaldisp").innerHTML = Math.round((eval / 7) * -10) / 10
-        document.getElementById("eval").style.height = 50 - (eval / 7) + "%"
+        // document.getElementById("evaldisp").innerHTML = Math.round((eval / 7) * -10) / 10
+        // document.getElementById("eval").style.height = 50 - (eval / 7) + "%"
         document.getElementById("depth").innerHTML = depth
-        setTimeout(function() {
-            setTimeout(() => {
-                resolve(x)
-            }, 100)
+        setTimeout(()=> {
+            resolve(1)
         }, 10)
     })
 }
@@ -59,6 +57,7 @@ function IterativeDeepening(depth) {
 }
 
 var totalNodes = 0
+var cutOffs = 0
 var totalTranspositions
 var tt = new TranspositionTable
 var [LOWERBOUND, EXACT, UPPERBOUND] = [-1, 0, 1]
@@ -95,6 +94,8 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
         }
         bestScore = Math.max(bestScore, eval)
     }
+
+    cutOffs = 0
 
     if (searchScore) {
         return [bestMove, bestScore]
@@ -180,6 +181,7 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
 
         var ttEntry = tt.lookup(board.hash)
         if (ttEntry != null) {
+            cutOffs++
             if (ttEntry[1] >= plyFromRoot) {
                 return ttEntry[0]
             }
@@ -209,10 +211,10 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
                 board.makeMove(move)
                 let eval = minimax(depth - 1, false, alpha, beta, plyFromRoot + 1)
                 board.unmakeMove(move)
-                alpha = Math.max(alpha, eval)
-                if (beta <= alpha) {
-                    break
-                }
+                // alpha = Math.max(alpha, eval)
+                // if (beta <= alpha) {
+                //     break
+                // }
                 maxeval = Math.max(eval, maxeval)
             }
             tt.store(board.hash, maxeval, plyFromRoot)
@@ -231,10 +233,10 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
                 board.makeMove(move)
                 let eval = minimax(depth - 1, true, alpha, beta, plyFromRoot + 1)
                 board.unmakeMove(move)
-                beta = Math.min(beta, eval)
-                if (beta <= alpha) {
-                    break
-                }
+                // beta = Math.min(beta, eval)
+                // if (beta <= alpha) {
+                //     break
+                // }
                 mineval = Math.min(eval, mineval)
             }
             tt.store(board.hash, mineval, plyFromRoot)

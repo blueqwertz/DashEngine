@@ -29,12 +29,14 @@ document.onreadystatechange = async function() {
         const isPackaged = require('electron-is-packaged').isPackaged;
 
         if (!isPackaged) {
-            ipcRenderer.send("start_app")
+            setTimeout(() => {
+                ipcRenderer.send("start_app")
+            }, 500)
             return
         }
 
         let updateAvailabe = await uaup.CheckForUpdates(updateOptions)
-
+        
         if (updateAvailabe == false) {
             ipcRenderer.send("start_app")
         } else {

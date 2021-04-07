@@ -38,7 +38,7 @@
     </header>
     <div class="win-loss" id="win-loss-cont">
       <div class="circle"></div>
-      <div class="who" id="win-draw">White Won</div>
+      <div class="who" id="win-draw">White Won!</div>
       <div class="users">
         <div class="you"><img src="icons/user.png" alt=""><p>You</p></div>
         <div class="score" id="score" id="score">1 - 0</div>
@@ -63,17 +63,18 @@
               <div class="eval">Version:</div><span id="version"></span>
             </div>
           </div>
-          <div class="moves-cont" id="moves">
-          </div>
+          <div class="moves-cont" id="moves"></div>
+          <div class="return" id="return" onclick="backToNormal()">Return</div>
         </div>
       </div>
-      <div class="evaluation-bar">
+      <div class="evaluation-bar" style="display: none;">
         <div class="white" id="eval"></div>
       </div>
         <div class="user" id="user-black"><span>Dash Engine</span><span class="time" id="time-black">5:00</span></div>
         <div class="boards">
             <div class="boardbg" id="boardbg"></div>
             <div class="overlay" id="points"></div>
+            <div class="overlay" id="lastMoves"></div>
             <div class="board" id="board"></div>
             <div class="select" id="select">
               <div class="piece wq"></div>

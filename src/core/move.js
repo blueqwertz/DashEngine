@@ -124,7 +124,8 @@ class MoveGenerator {
         if (change) {
             board.col = board.col == 1 ? 0 : 1
         }
-        for (let piece of board.pos) {
+        for (let i = 0; i < 64; i++) {
+            let piece = board.pos[i]
             if (piece != null && piece.col == board.col) {
                 let numnorth = 7 - (Math.floor(piece.pos / 8))
                 let numsouth = (Math.floor(piece.pos / 8))
@@ -235,7 +236,8 @@ class MoveGenerator {
                 board.checkMate = board.col
             }
             return moves
-        } for (let piece of board.pos) {
+        } for (let i = 0; i < 64; i++) {
+            let piece = board.pos[i]
             if (piece != null && piece.col == board.col) {
                 let numnorth = 7 - (Math.floor(piece.pos / 8))
                 let numsouth = (Math.floor(piece.pos / 8))

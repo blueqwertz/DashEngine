@@ -7,7 +7,7 @@ body {
 #titlebar {
     display: block;
     position: fixed;
-    height: 25px;
+    height: 30px;
     width: 100%;
     background: rgb(43, 42, 43);
     user-select: none;
@@ -514,13 +514,17 @@ body {
     text-align: center;
 }
 
+.users div img {
+    width: 95%;
+}
+
 .users div p {
     margin: 20px 0px;
 }
 
 .users .score {
     height: 18px;
-    margin-top: 135px;
+    margin-top: 130.5px;
 }
 
 .users img {
@@ -539,16 +543,18 @@ body {
     cursor: pointer;
     user-select: none;
     z-index: 20;
-    background: linear-gradient(90deg, #F13612 0%, #F5A318 100%);
+    background-image: linear-gradient(to right, #F13612 0%, #F5A318 100%);
+    background-position: 0 -30px;
+    transition: all 0.2s linear;
 }
 
 .evaluation-bar {
     width: 25px;
     height: 100%;
     position: absolute;
-    background-color: #3D3C3D;
-    transform: translateX(-50px);
-    box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
+    background-color: #4b4b4b;
+    left: calc(100% + 30px);
+    box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
 
@@ -581,9 +587,8 @@ body {
 
 .stats-cont {
     position: absolute;
-    right: calc(100% + 75px);
+    right: calc(100% + 30px);
     width: 240px;
-    /* height: 340px; */
     background-color: #363636;
     font-family: "Rubik", sans-serif;
     transition: opacity .3s;
@@ -676,10 +681,32 @@ body {
     user-select: none;
 }
 
-.moves-cont:last-child .row:last-child .move:last-child {
+.moves-cont .row .move.current {
     background-color: #676767;   
 }
 
 .moves-cont .row .move:hover {
     background-color: #676767;
+}
+
+.stats .return {
+    position: absolute;
+    top: calc(100% + 15px);
+    color: white;
+    right: 0%;
+    padding: 7px 15px;
+    background-color: #474444;
+    border-radius: 5px;
+    user-select: none;
+    cursor: pointer;
+    transition: background-color .3s, opacity .3s;
+    opacity: 0;
+}
+
+.stats .return:hover {
+    background-color: #413e3e;
+}
+
+.stats .return.show {
+    opacity: 1;
 }

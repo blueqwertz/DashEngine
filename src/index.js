@@ -20,19 +20,17 @@ const createWindow = () => {
       preload: `${__dirname}/electron/nodestuff.js`
     }
   });
-
-  if (loadingScreen) {
-    loadingScreen.close()
-  }
-
+  
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
   mainWindow.setMenu(null);
   mainWindow.maximize()
 
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
-  })
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (loadingScreen) {
+      loadingScreen.close();
+    }
+    mainWindow.show();
+  });
 };
 
 var loadingScreen;
@@ -44,6 +42,7 @@ const createLoadingScreen = () => {
       height: 300,
       icon: image,
       frame: false,
+      show: false,
       backgroundColor: '#363536',
       webPreferences: {
         nodeIntegration: true,
@@ -53,11 +52,15 @@ const createLoadingScreen = () => {
       }
     })
   );
-  loadingScreen.webContents.openDevTools()
   loadingScreen.setMenu(null);
   loadingScreen.setResizable(false);
   loadingScreen.loadFile(path.join(__dirname, 'loading.html'));
   loadingScreen.on('closed', () => (loadingScreen = null))
+
+  loadingScreen.webContents.on("did-finish-load", () => {
+    loadingScreen.show()
+  })
+
 };
 
 app.on('window-all-closed', () => {

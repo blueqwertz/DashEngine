@@ -76,7 +76,7 @@ function print_bitarr(arr) {
 let movegenerator = new MoveGenerator()
 
 var board = new Board()
-let testFen = "r3kbnr/ppp2ppp/2n5/4p3/2Bq4/2N2P2/PPP2P1P/R1BQ1K2 w kq -"
+let testFen = "3k4/3r4/8/8/8/8/3K4/8 w - - 0 1"
 board.setup()
 // board.setFen(testFen)
 

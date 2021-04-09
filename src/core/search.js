@@ -181,7 +181,6 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
 
         var ttEntry = tt.lookup(board.hash)
         if (ttEntry != null) {
-            cutOffs++
             if (ttEntry[1] >= plyFromRoot) {
                 return ttEntry[0]
             }
@@ -211,10 +210,10 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
                 board.makeMove(move)
                 let eval = minimax(depth - 1, false, alpha, beta, plyFromRoot + 1)
                 board.unmakeMove(move)
-                // alpha = Math.max(alpha, eval)
-                // if (beta <= alpha) {
-                //     break
-                // }
+                alpha = Math.max(alpha, eval)
+                if (beta <= alpha) {
+                    break
+                }
                 maxeval = Math.max(eval, maxeval)
             }
             tt.store(board.hash, maxeval, plyFromRoot)
@@ -233,10 +232,10 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
                 board.makeMove(move)
                 let eval = minimax(depth - 1, true, alpha, beta, plyFromRoot + 1)
                 board.unmakeMove(move)
-                // beta = Math.min(beta, eval)
-                // if (beta <= alpha) {
-                //     break
-                // }
+                beta = Math.min(beta, eval)
+                if (beta <= alpha) {
+                    break
+                }
                 mineval = Math.min(eval, mineval)
             }
             tt.store(board.hash, mineval, plyFromRoot)

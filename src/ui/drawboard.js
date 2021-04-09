@@ -23,10 +23,7 @@ function setupBoard() {
             document.getElementById("boardbg").innerHTML += `<div class="file dark" style="grid-collumn:${x}; grid-row:${(7 - y)}"></div>`
         }
         if (board.pos[x + y * 8] != null) {
-            let colcode = board.pos[x + y * 8].col == 1 ? "w" : "b"
-            let piececode = getLookup(board.pos[x + y * 8].type, board.pos[x + y * 8].col).toLowerCase()
-            let code = colcode + piececode
-            divboard.innerHTML += `<div class="piece ${code} check" id="${x + y * 8}" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
+            addPiece(board.pos[x + y * 8], x, y)
         }
     }
     for (let el of divboard.children) {
@@ -36,6 +33,13 @@ function setupBoard() {
             el.classList.add("dark-piece")
         }
     }
+}
+
+function addPiece(piece, x, y) {
+    let colcode = board.pos[x + y * 8].col == 1 ? "w" : "b"
+    let piececode = getLookup(board.pos[x + y * 8].type, board.pos[x + y * 8].col).toLowerCase()
+    let code = colcode + piececode
+    divboard.innerHTML += `<div class="piece ${code}" id="${x + y * 8}" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
 }
 
 let curmoves = []
@@ -325,7 +329,7 @@ async function makedisplaymove(ind, show=false) {
     if (movesMade % 2 == 0) {
         document.getElementById("moves").innerHTML += `<div class="row" id="m${movesMade / 2}"></div>`
     }
-    document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move' onclick='goBack(" + (movesMade+1) + ")'>" + convertToPgn(move) +"</div>"
+    document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move'>" + convertToPgn(move) +"</div>"
 
     var objDiv = document.getElementById("moves");
     objDiv.scrollTop = objDiv.scrollHeight;
@@ -393,28 +397,36 @@ async function makedisplaymove(ind, show=false) {
 }
 
 
-function backToNormal() {
+function backToNormal(numMoves=tempMovesMade - movesMade) {
     isBack = true
-    while (movesBack.length > 0) {
-        let move = movesBack.shift()
+    for (let i = 0; i < numMoves; i++) {
+        let move = movesBack.pop()
         console.log(move)
         curmoves = [move]
         makedisplaymove(0, true)
+    } if (movesMade == tempMovesMade) {
+        isBack = true
+    } else {
+        isBack = false
     }
-    document.getElementById("return").classList.remove("show")
 }
 
 let isBack = true
 let movesBack = []
+let tempMovesMade
 
-function goBack(numMoves) {
+function goBack(numMoves=movesMade) {
+    if (isBack) {
+        tempMovesMade = movesMade
+    }
     isBack = false
-    let tempMovesMade = movesMade
-    for (let i = 0; i <= tempMovesMade - numMoves; i++) {
+    for (let i = 0; i < numMoves; i++) {
         movesMade--
         unmakedisplaymove()
+        if (movesMade <= 0) {
+            break
+        }
     }
-    document.getElementById("return").classList.add("show")
 }
 
 function unmakedisplaymove() {
@@ -430,6 +442,18 @@ function unmakedisplaymove() {
     board.unmakeMove(move)
 
     divoverlay.innerHTML = ""
+    let x = move.startSq % 8
+    let y = Math.floor(move.startSq / 8)
+    lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
+    lastMovesDiv.innerHTML += `<div class="content lastmovestart" style="transform: translate(${(move.endSq % 8 - 1) * 100}%, ${(7 - (Math.floor(move.endSq / 8))) * 100}%)"></div>`
+    document.getElementById("m" + ~~(movesMade/2)).children[movesMade % 2].outerHTML = ""
+    if (movesMade % 2 == 0) {
+        document.getElementById("m" + ~~(movesMade/2)).outerHTML = ""
+    }
+    console.log("m" + ~~(movesMade/2), movesMade % 2)
+    document.getElementById(move.endSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
+    document.getElementById(move.endSq).id = move.startSq
+
     if (board.pos[move.endSq] != null) {
         document.getElementById("r" + move.endSq).classList.remove("remove")
         document.getElementById("r" + move.endSq).id = move.endSq
@@ -442,14 +466,6 @@ function unmakedisplaymove() {
         document.getElementById(move.castle[1]).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
         document.getElementById(move.castle[1]).id = move.castle[0]
     }
-    let x = move.startSq % 8
-    let y = Math.floor(move.startSq / 8)
-    lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
-    lastMovesDiv.innerHTML += `<div class="content lastmovestart" style="transform: translate(${(move.endSq % 8 - 1) * 100}%, ${(7 - (Math.floor(move.endSq / 8))) * 100}%)"></div>`
-    console.log(~~(movesMade/2))
-    document.getElementById("m" + ~~(movesMade/2)).children[movesMade % 2].outerHTML = ""
-    document.getElementById(move.endSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
-    document.getElementById(move.endSq).id = move.startSq
 }
 
 function removeSel() {

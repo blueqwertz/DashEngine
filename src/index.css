@@ -455,26 +455,13 @@ body {
     font-family: "Rubik", sans-serif;
     box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
     opacity: 0;
+    transition: opacity 0.3s;
     pointer-events: none;
 }
 
 .win-loss.show {
-    animation: pop-in .3s;
     pointer-events: all;
     opacity: 1;
-}
-
-@keyframes pop-in {
-    0% {
-        width: 230px;
-        height: 185px;
-        opacity: 0;
-    }
-    100% {
-        width: 460px;
-        height: 370px;
-        opacity: 1;
-    }
 }
 
 .win-loss .circle {
@@ -676,7 +663,6 @@ body {
     padding: 2px 4px;
     background-color: #363636;
     border-radius: 3px;
-    cursor: pointer;
     transition: background-color .3s;
     user-select: none;
 }
@@ -685,28 +671,33 @@ body {
     background-color: #676767;   
 }
 
-.moves-cont .row .move:hover {
-    background-color: #676767;
-}
-
-.stats .return {
-    position: absolute;
-    top: calc(100% + 15px);
-    color: white;
-    right: 0%;
-    padding: 7px 15px;
-    background-color: #474444;
-    border-radius: 5px;
-    user-select: none;
-    cursor: pointer;
-    transition: background-color .3s, opacity .3s;
-    opacity: 0;
-}
-
-.stats .return:hover {
-    background-color: #413e3e;
-}
-
 .stats .return.show {
     opacity: 1;
+}
+
+.game-skip {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    background-color: #424242;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.game-skip svg {
+    pointer-events: none;
+    fill: #6D6D6D;
+    transition: fill .3s;
+}
+
+.game-skip svg.active:hover {
+    fill: #ffffff;
+}
+
+.game-skip svg.active {
+    cursor: pointer;
+    fill: #AEAEAE;
+    pointer-events: all;
 }

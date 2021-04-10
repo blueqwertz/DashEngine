@@ -65,18 +65,18 @@
           </div>
           <div class="moves-cont" id="moves"></div>
           <div class="game-skip">
-            <svg class="" id="back-front" onclick="goBack()" width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="" id="back-front" onclick="goBack()" width="19" height="13" viewBox="0 0 19 13" fill="none">
               <path d="M0 0H2V12H0V0Z" />
               <path d="M10.5 6L19 0V12.0574L10.5 6Z" />
               <path d="M2 6L10.5 0V12.0574L2 6Z" />
             </svg>
-            <svg class="" onclick="goBack(1)" id="back" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="" onclick="goBack(1)" id="back" width="12" height="12" viewBox="0 0 12 12" fill="none">
               <path d="M12 12L3.5 6L12 0V12ZM2 0V12H0V0H2Z" />
             </svg>
-            <svg class="" id="skip" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="" id="skip" width="12" onclick="backToNormal(1)" height="12" viewBox="0 0 12 12" fill="none">
               <path d="M0 12L8.5 6L0 0V12ZM10 0V12H12V0H10Z" />
             </svg>
-            <svg class="" id="skip-last" onclick="backToNormal()" width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="" id="skip-last" onclick="backToNormal()" width="19" height="13" viewBox="0 0 19 13" fill="none">
               <path d="M19 0H17V12H19V0Z"/>
               <path d="M8.5 6L0 0V12.0574L8.5 6Z"/>
               <path d="M17 6L8.5 0V12.0574L17 6Z"/>
@@ -87,7 +87,7 @@
       <div class="evaluation-bar" style="display: none;">
         <div class="white" id="eval"></div>
       </div>
-        <div class="user" id="user-black"><span>Dash Engine</span><span class="time" id="time-black">5:00</span></div>
+        <div class="user" id="user-black"><span>Dash Engine</span><div class="searching">Searching</div><span class="time" id="time-black">5:00</span></div>
         <div class="boards">
             <div class="boardbg" id="boardbg"></div>
             <div class="overlay" id="points"></div>

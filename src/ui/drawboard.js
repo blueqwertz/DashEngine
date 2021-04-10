@@ -292,9 +292,11 @@ async function makedisplaymove(ind, show=false) {
     if (!isBack) {
         return
     }
+
     lastMovesDiv.innerHTML = ""
     board.movesMade += 1/2
     if (timer == null) {
+        lasttimestart = new Date()
         timer = setInterval(function () {
             updateTime()
         }, 200)
@@ -326,10 +328,12 @@ async function makedisplaymove(ind, show=false) {
         captureSound.play()
     }
 
-    if (movesMade % 2 == 0) {
-        document.getElementById("moves").innerHTML += `<div class="row" id="m${movesMade / 2}"></div>`
+    if (!show) {
+        if (movesMade % 2 == 0) {
+            document.getElementById("moves").innerHTML += `<div class="row" id="m${movesMade / 2}"></div>`
+        }
+        document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move'>" + convertToPgn(move) +"</div>"
     }
-    document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move'>" + convertToPgn(move) +"</div>"
 
     var objDiv = document.getElementById("moves");
     objDiv.scrollTop = objDiv.scrollHeight;
@@ -370,6 +374,8 @@ async function makedisplaymove(ind, show=false) {
     document.getElementById(move.startSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
     document.getElementById(move.startSq).id = move.endSq
 
+    UpdateButtons(tempMovesMade == null ? movesMade : tempMovesMade, movesMade)
+
     if (!show) {
         setTimeout(function() {
             if (board.col == 0) {
@@ -377,18 +383,20 @@ async function makedisplaymove(ind, show=false) {
                     if (board.movesMade < 5) {
                         let bestMove = searchMoves(board.moves)
                         bestMove.then(move => {
-                            curmoves = [move]
-                            makedisplaymove(0)
+                            if (move != null) {
+                                curmoves = [move]
+                                makedisplaymove(0)
+                            }
                         })
                     }
                     else {
                         let bestMove = Deepening(searchTime)
-                        if (bestMove != null) {
-                            bestMove.then(move => {
+                        bestMove.then(move => {
+                            if (move != null) {
                                 curmoves = [move]
                                 makedisplaymove(0)
-                            })
-                        }
+                            }
+                        })
                     }
                 }
             }
@@ -396,12 +404,32 @@ async function makedisplaymove(ind, show=false) {
     }
 }
 
+var first = document.getElementById("back-front")
+var back = document.getElementById("back")
+var skip = document.getElementById("skip")
+var last = document.getElementById("skip-last")
+
+
+function UpdateButtons(movesMade, curMove) {
+    if (curMove > 0) {
+        first.classList.add("active")
+        back.classList.add("active")
+    } else {
+        first.classList.remove("active")
+        back.classList.remove("active")
+    } if (curMove < movesMade) {
+        skip.classList.add("active")
+        last.classList.add("active")
+    } else {
+        skip.classList.remove("active")
+        last.classList.remove("active")
+    }
+}
 
 function backToNormal(numMoves=tempMovesMade - movesMade) {
     isBack = true
     for (let i = 0; i < numMoves; i++) {
         let move = movesBack.pop()
-        console.log(move)
         curmoves = [move]
         makedisplaymove(0, true)
     } if (movesMade == tempMovesMade) {
@@ -446,11 +474,7 @@ function unmakedisplaymove() {
     let y = Math.floor(move.startSq / 8)
     lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
     lastMovesDiv.innerHTML += `<div class="content lastmovestart" style="transform: translate(${(move.endSq % 8 - 1) * 100}%, ${(7 - (Math.floor(move.endSq / 8))) * 100}%)"></div>`
-    document.getElementById("m" + ~~(movesMade/2)).children[movesMade % 2].outerHTML = ""
-    if (movesMade % 2 == 0) {
-        document.getElementById("m" + ~~(movesMade/2)).outerHTML = ""
-    }
-    console.log("m" + ~~(movesMade/2), movesMade % 2)
+
     document.getElementById(move.endSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
     document.getElementById(move.endSq).id = move.startSq
 
@@ -466,6 +490,8 @@ function unmakedisplaymove() {
         document.getElementById(move.castle[1]).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
         document.getElementById(move.castle[1]).id = move.castle[0]
     }
+
+    UpdateButtons(tempMovesMade, movesMade)
 }
 
 function removeSel() {

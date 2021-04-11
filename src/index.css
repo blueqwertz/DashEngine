@@ -334,7 +334,7 @@ body {
 .select {
     width: 12.5%;
     height: 50%;
-    z-index: 10;
+    z-index: 10000;
     position: absolute;
     background-color: #F3E8DC;
     box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
@@ -438,7 +438,7 @@ body {
     transition: opacity .3s;
 }
 
-.user.cur .searching {
+.user .searching.active {
     opacity: 1;
 }
 

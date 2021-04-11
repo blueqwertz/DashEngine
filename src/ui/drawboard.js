@@ -219,6 +219,45 @@ function newGame() {
 var curScore
 var ycoord
 
+function changeTime(time, col) {
+    let minutes = Math.floor(time / 60)
+    let seconds = makeFull(Math.floor(time - minutes * 60))
+
+    if (minutes == 0) {
+        let seconds = Math.floor(time)
+        time -= seconds
+        let milli = Math.ceil(time * 10)
+        if (milli == 10) {
+            seconds++
+            milli = 0
+        }
+        if (col == 1) {
+            if (time < 10) {
+                document.getElementById("time-white").classList.add("low")
+                document.getElementById("time-black").classList.remove("low")
+            }
+            document.getElementById("time-white").innerHTML = seconds + "." + milli
+            return
+        }
+        if (time < 10) {
+            document.getElementById("time-black").classList.add("low")
+            document.getElementById("time-white").classList.remove("low")
+        }
+        document.getElementById("time-black").innerHTML = seconds + "." + milli
+        
+        return
+    }
+    
+    if (col == 1) {
+        document.getElementById("time-white").innerHTML = minutes + ":" + seconds
+        return
+    }
+    document.getElementById("time-black").innerHTML = minutes + ":" + seconds
+}
+
+changeTime(timeall, 1)
+changeTime(timeall, 0)
+
 function updateTime() {
     if (!gameOver) {
         if (movegenerator.generateMoves().length == 0) {
@@ -248,7 +287,6 @@ function updateTime() {
             document.getElementById("win-draw").innerHTML = "Draw"
             document.getElementById("score").innerHTML = `${scoreYou} - ${scoreDash}`
             gameOver = true
-            timer = null
         }
         let now = new Date()
         let timepassed = (now - lasttimestart) / 1000
@@ -256,18 +294,36 @@ function updateTime() {
             document.getElementById("user-black").classList.remove("cur")
             document.getElementById("user-white").classList.add("cur")
             timewhite -= timepassed
-            let minutes = Math.floor(timewhite / 60)
-            let seconds = makeFull(Math.floor(timewhite - minutes * 60))
-            document.getElementById("time-white").innerText = minutes + ":" + seconds
+            changeTime(timewhite, 1)
         } else {
             document.getElementById("user-white").classList.remove("cur")
             document.getElementById("user-black").classList.add("cur")
             timeblack -= timepassed
-            let minutes = Math.floor(timeblack / 60)
-            let seconds = makeFull(Math.floor(timeblack - minutes * 60))
-            document.getElementById("time-black").innerText = minutes + ":" + seconds
+            changeTime(timeblack, 0)
         }
         lasttimestart = new Date()
+
+        if (timeblack < 0) {
+            scoreYou++
+            document.getElementById("win-draw").innerHTML = "You won!"
+            document.getElementById("score").innerHTML = `${scoreYou} - ${scoreDash}`
+            document.getElementById("win-loss-cont").classList.add("show")
+            gameOver = true
+            changeTime(timewhite, 1)
+            changeTime(0, 0)
+        } else if (timewhite < 0) {
+            scoreDash++
+            document.getElementById("win-draw").innerHTML = "DashEngine won!"
+            document.getElementById("score").innerHTML = `${scoreYou} - ${scoreDash}`
+            document.getElementById("win-loss-cont").classList.add("show")
+            changeTime(0, 1)
+            changeTime(timeblack, 0)
+            gameOver = true
+        }
+    } else {
+        document.getElementById("time-black").classList.remove("low")
+        document.getElementById("time-white").classList.remove("low")
+        timer = null
     }
 }
 
@@ -291,6 +347,8 @@ function makeFull(x) {
 async function makedisplaymove(ind, show=false) {
     if (!isBack) {
         return
+    } if (board.col == 0) {
+        document.getElementById("searching").classList.remove("active")
     }
 
     lastMovesDiv.innerHTML = ""
@@ -299,10 +357,16 @@ async function makedisplaymove(ind, show=false) {
         lasttimestart = new Date()
         timer = setInterval(function () {
             updateTime()
-        }, 200)
+        }, 100)
     }
     removeSel()
     let move = curmoves[ind]
+
+    if (move == null) {
+        console.warn("null move")
+        return
+    }
+
     board.movesHistory.push(move)
     if (move.promotionType != null && board.col == 1) {
         let promTypes = [5, 2, 4, 3]
@@ -377,8 +441,9 @@ async function makedisplaymove(ind, show=false) {
     UpdateButtons(tempMovesMade == null ? movesMade : tempMovesMade, movesMade)
 
     if (!show) {
-        setTimeout(function() {
-            if (board.col == 0) {
+        if (board.col == 0) {
+                setTimeout(function() {
+                document.getElementById("searching").classList.add("active")
                 if (!gameOver) {
                     if (board.movesMade < 5) {
                         let bestMove = searchMoves(board.moves)
@@ -399,8 +464,8 @@ async function makedisplaymove(ind, show=false) {
                         })
                     }
                 }
-            }
-        }, 200)
+            }, 200)
+        }
     }
 }
 
@@ -429,8 +494,7 @@ function UpdateButtons(movesMade, curMove) {
 function backToNormal(numMoves=tempMovesMade - movesMade) {
     isBack = true
     for (let i = 0; i < numMoves; i++) {
-        let move = movesBack.pop()
-        curmoves = [move]
+        curmoves = [movesBack.pop()]
         makedisplaymove(0, true)
     } if (movesMade == tempMovesMade) {
         isBack = true

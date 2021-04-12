@@ -207,13 +207,16 @@ function newGame() {
     document.getElementById("evaldisp").innerHTML = "-"
     timewhite = timeall
     timeblack = timeall
+    changeTime(timeall, 0)
+    changeTime(timeall, 1)
     movesMade = 0
     lasttimestart = new Date()
     gameOver = false
     board = new Board()
     board.setup()
     setupBoard()
-    updateTime()
+    clearInterval(timer)
+    timer = null
 }
 
 var curScore
@@ -279,7 +282,6 @@ function updateTime() {
             }
             document.getElementById("win-loss-cont").classList.add("show")
             gameOver = true
-            timer = null
         } if (checkDraw()) {
             scoreDash += 1/2
             scoreYou += 1/2
@@ -323,6 +325,7 @@ function updateTime() {
     } else {
         document.getElementById("time-black").classList.remove("low")
         document.getElementById("time-white").classList.remove("low")
+        clearInterval(timer)
         timer = null
     }
 }

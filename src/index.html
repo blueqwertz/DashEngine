@@ -37,6 +37,7 @@
         </div>
     </header>
     <div class="win-loss" id="win-loss-cont">
+      <img class="close" id="close" onclick="document.getElementById('win-loss-cont').classList.remove('show')" src="icons/close-w-30.png" alt="">
       <div class="circle"></div>
       <div class="who" id="win-draw">White Won!</div>
       <div class="users">
@@ -83,6 +84,7 @@
             </svg>
           </div>
         </div>
+        <div class="newgame-outside" onclick="newGame()">New Game</div>
       </div>
       <div class="evaluation-bar" style="display: none;">
         <div class="white" id="eval"></div>

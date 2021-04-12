@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: rgb(54, 53, 54);
+    font-family: "Rubik", sans-serif;
 }
 
 #titlebar {
@@ -158,10 +159,9 @@ body {
     width: 12.5%;
     height: 12.5%;
     background-position: center;
-    background-repeat: none;
     background-size: cover;
     cursor: grab;
-    transition: transform .2s;
+    transition: transform .15s;
 }
 
 .piece.grab {
@@ -211,7 +211,7 @@ body {
 }
 
 .selected {
-    background-color: rgba(245, 233, 61, 0.733);
+    background-color: rgba(255, 255, 0, 0.8);
 }
 
 .content {
@@ -233,27 +233,30 @@ body {
     z-index: 0;
 }
 
-.content:hover .point {
-    box-shadow:0px 0px 0px 5px rgba(255, 255, 255, 0.7) inset;
-}
-
-.content.view .point {
-    box-shadow:0px 0px 0px 5px rgba(255, 255, 255, 0.7) inset;
+.content:hover, .content.view{
+    box-shadow:0px 0px 0px 4px rgba(255, 255, 255, 0.8) inset;
 }
 
 .point {
     position: absolute;
     top: 50%;
     left: 50%;
-    /* height: 30%;
-    width: 30%; */
-    /* background-color: rgba(0,0,0,0.15); */
-    /* border-radius: 50%; */
+    height: 30%;
+    width: 30%;
+    background-color: rgba(0,0,0,0.25);
+    border-radius: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    width: 100%;height: 100%;
-    background-color: #d16464d7;
+    /* width: 100%;height: 100%; */
+    /* background-color: #d16464d7; */
+}
 
+.content .point.attack {
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 8px solid rgba(0, 0, 0, 0.15);
 }
 
 @keyframes bounce {
@@ -480,6 +483,17 @@ body {
     opacity: 1;
 }
 
+.win-loss .close {
+    width: 14px;
+    position: absolute;
+    margin: 14px;
+    top: 0;
+    right: 0;
+    z-index: 11;
+    cursor: pointer;
+    padding: 4px;
+}
+
 .win-loss .circle {
     position: absolute;
     width: 1000px;
@@ -534,7 +548,7 @@ body {
     width: 100%;
 }
 
-.win-loss .newgame {
+.newgame {
     color: white;
     font-size: 18px;
     position: absolute;
@@ -549,6 +563,27 @@ body {
     background-image: linear-gradient(to right, #F13612 0%, #F5A318 100%);
     background-position: 0 -30px;
     transition: all 0.2s linear;
+}
+
+.newgame-outside {
+    color: white;
+    font-size: 15px;
+    position: absolute;
+    top: 100%;
+    right: 0%;
+    padding: 5px 12px;
+    margin: 15px 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    background-color: #424242;
+    white-space: nowrap;
+}
+
+.newgame-outside
+
+.hidden {
+    display: none;
 }
 
 .evaluation-bar {

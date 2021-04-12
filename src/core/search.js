@@ -14,6 +14,12 @@ async function Deepening(time, view=false) {
         if (curScore > bestScore) {
             bestMove = curBestMove
         }
+        bestScore = Math.max(bestScore, curScore)
+        if (curScore == infinity) {
+            return new Promise((resolve) => {
+                resolve(bestMove)
+            })
+        }
         await updateEvalDepthDisp(curScore, tempDepth)
         if (view) {
             console.log(`${tempDepth} ply: ${totalNodes}, time left: ${time - (Date.now() - start)}`)
@@ -50,6 +56,9 @@ function IterativeDeepening(depth) {
         }
         console.log(`${tempDepth} ply: ${Date.now() - start} ms, nodes: ${totalNodes}`)
         iterativeNodes += totalNodes
+        if (bestScore == infinity) {
+            return bestMove
+        }
     }
     console.log((Date.now() - begin).toString() + "ms, nodes", iterativeNodes.toString())
     tt.clear()
@@ -62,6 +71,9 @@ var totalTranspositions
 var tt = new TranspositionTable
 var [LOWERBOUND, EXACT, UPPERBOUND] = [-1, 0, 1]
 
+var infinity = 999999
+var negativeInfinity = -infinity
+
 function Search(depth=1, searchScore=false, timeRemaining=999999) {
     if (depth == 0) {
         return undefined
@@ -72,9 +84,6 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
     totalNodes = 0
 
     let moves = orderMoves(movegenerator.generateMoves())
-
-    var infinity = 999999
-    var negativeInfinity = -infinity
 
     var bestScore = negativeInfinity
     var bestMove

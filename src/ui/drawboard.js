@@ -292,7 +292,7 @@ function updateTime() {
         }
         let now = new Date()
         let timepassed = (now - lasttimestart) / 1000
-        if (board.col == 1) {
+        if (board.col == 1 || !isBack) {
             document.getElementById("user-black").classList.remove("cur")
             document.getElementById("user-white").classList.add("cur")
             timewhite -= timepassed
@@ -348,7 +348,7 @@ function makeFull(x) {
 }
 
 async function makedisplaymove(ind, show=false) {
-    if (!isBack) {
+    if (!isBack && !show) {
         return
     } if (board.col == 0) {
         document.getElementById("searching").classList.remove("active")
@@ -422,11 +422,9 @@ async function makedisplaymove(ind, show=false) {
 
     divoverlay.innerHTML = ""
     if (board.pos[move.endSq] != null) {
-        document.getElementById(move.endSq).classList.add("remove")
-        document.getElementById(move.endSq).id = "r" + move.endSq
+        document.getElementById(move.endSq).outerHTML = ""
     } if (move.enPassant != null) {
-        document.getElementById(move.enPassant.pos).classList.add("remove")
-        document.getElementById(move.enPassant.pos).id = "r" + move.enPassant
+        document.getElementById(move.enPassant.pos).outerHTML = ""
     } if (move.castle != null) {
         let x = move.castle[1] % 8
         let y = Math.floor(move.castle[1] / 8)
@@ -495,12 +493,19 @@ function UpdateButtons(movesMade, curMove) {
 }
 
 function backToNormal(numMoves=tempMovesMade - movesMade) {
-    isBack = true
-    for (let i = 0; i < numMoves; i++) {
+    let i = 1
+    let x = setInterval(() => {
+        if (i >= numMoves) {
+            clearInterval(x)
+        }
         curmoves = [movesBack.pop()]
         makedisplaymove(0, true)
-    } if (movesMade == tempMovesMade) {
-        isBack = true
+        i++
+    }, 100)
+    if (movesMade + numMoves == tempMovesMade) {
+        setTimeout(() => {
+            isBack = true
+        }, 100 * numMoves)
     } else {
         isBack = false
     }
@@ -515,13 +520,26 @@ function goBack(numMoves=movesMade) {
         tempMovesMade = movesMade
     }
     isBack = false
-    for (let i = 0; i < numMoves; i++) {
+    let i = 1
+    document.getElementById("board").classList.add("back")
+    let x = setInterval(() => {
+        if (i >= numMoves) {
+            clearInterval(x)
+        }
         movesMade--
         unmakedisplaymove()
         if (movesMade <= 0) {
-            break
+            clearInterval(x)
         }
-    }
+        i++
+    }, 100)
+    document.getElementById("board").classList.remove("back")
+}
+
+async function sleep(ms) {
+    setTimeout((resolve) => {
+        resolve(1)
+    }, ms)
 }
 
 function unmakedisplaymove() {
@@ -530,9 +548,15 @@ function unmakedisplaymove() {
     }
     
     lastMovesDiv.innerHTML = ""
-
+    
     movesBack.push(board.movesHistory[board.movesHistory.length - 1])
     let move = board.movesHistory.pop()
+    
+    if (move.attack == null) {
+        moveSound.play()
+    } else {
+        captureSound.play()
+    }
 
     board.unmakeMove(move)
 
@@ -545,12 +569,14 @@ function unmakedisplaymove() {
     document.getElementById(move.endSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
     document.getElementById(move.endSq).id = move.startSq
 
-    if (board.pos[move.endSq] != null) {
-        document.getElementById("r" + move.endSq).classList.remove("remove")
-        document.getElementById("r" + move.endSq).id = move.endSq
+    if (move.attack != null) {
+        setTimeout(() => {
+            addPiece(move.attack, move.attack.pos%8, ~~(move.attack.pos / 8))
+        }, 100)
     } if (move.enPassant != null) {
-        document.getElementById("r" + move.enPassant.pos).classList.remove("remove")
-        document.getElementById("r" + move.enPassant.pos).id = move.enPassant.pos
+        setTimeout(() => {
+            addPiece(move.enPassant, move.enPassant.pos%8, ~~(move.enPassant.pos / 8))
+        }, 100)
     } if (move.castle != null) {
         let x = move.castle[0] % 8
         let y = Math.floor(move.castle[0] / 8)

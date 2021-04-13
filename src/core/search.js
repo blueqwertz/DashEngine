@@ -87,12 +87,10 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
 
     var bestScore = negativeInfinity
     var bestMove
-
-    let isBlack = board.col == 0 ? false : true
     
     for (let move of moves) {
         board.makeMove(move)
-        let eval = minimax(depth - 1, isBlack, negativeInfinity, infinity, 0)
+        let eval = minimax(depth - 1, board.col == 0, negativeInfinity, infinity, 0)
         // let eval = negamax(depth - 1, isBlack, negativeInfinity, infinity)
         board.unmakeMove(move)
         if (eval == null) {

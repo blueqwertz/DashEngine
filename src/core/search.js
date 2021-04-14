@@ -15,11 +15,6 @@ async function Deepening(time, view=false) {
             bestMove = curBestMove
         }
         bestScore = Math.max(bestScore, curScore)
-        if (curScore == infinity) {
-            return new Promise((resolve) => {
-                resolve(bestMove)
-            })
-        }
         await updateEvalDepthDisp(curScore, tempDepth)
         if (view) {
             console.log(`${tempDepth} ply: ${totalNodes}, time left: ${time - (Date.now() - start)}`)

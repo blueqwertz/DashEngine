@@ -52,6 +52,7 @@
     "electron-log": "^4.3.2",
     "electron-updater": "^4.3.8",
     "fs": "0.0.1-security",
+    "jsonfile": "^6.1.0",
     "uaup-js": "0.0.22",
     "update-electron-app": "^2.0.1"
   },

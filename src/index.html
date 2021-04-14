@@ -48,40 +48,66 @@
       <div class="newgame" onclick="newGame()">New Game</div>
     </div>
     <div class="cont">
-      <div class="stats-cont">
-        <div class="header">
-          <span>Game Info</span><div class="close"><img src="icons/close-w-30.png" alt="" onclick="this.parentElement.parentElement.parentElement.style.opacity = '0'"></div>
-        </div>
-        <div class="stats">
-          <div class="info">
-            <div class="container">
-              <div class="depth">Depth:</div><span id="depth">-</span>
-            </div>
-            <div class="container">
-              <div class="eval">Eval:</div><span id="evaldisp">-</span>
-            </div>
-            <div class="container">
-              <div class="eval">Version:</div><span id="version"></span>
+      <div class="left">
+        <div class="stats-cont">
+          <div class="header">
+            <span>Game Info</span><div class="close" onclick="closeSideBar(this)"><img src="icons/close.svg" alt=""></div>
+          </div>
+          <div class="outer">
+            <div class="stats">
+              <div class="info">
+                <div class="container">
+                  <div class="depth">Depth:</div><span id="depth">-</span>
+                </div>
+                <div class="container">
+                  <div class="eval">Eval:</div><span id="evaldisp">-</span>
+                </div>
+              </div>
+              <div class="moves-cont" id="moves"></div>
+              <div class="game-skip">
+                <svg class="" id="back-front" onclick="goBack()" width="19" height="13" viewBox="0 0 19 13" fill="none">
+                  <path d="M0 0H2V12H0V0Z" />
+                  <path d="M10.5 6L19 0V12.0574L10.5 6Z" />
+                  <path d="M2 6L10.5 0V12.0574L2 6Z" />
+                </svg>
+                <svg class="" onclick="goBack(1)" id="back" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M12 12L3.5 6L12 0V12ZM2 0V12H0V0H2Z" />
+                </svg>
+                <svg class="" id="skip" width="12" onclick="backToNormal(1)" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M0 12L8.5 6L0 0V12ZM10 0V12H12V0H10Z" />
+                </svg>
+                <svg class="" id="skip-last" onclick="backToNormal()" width="19" height="13" viewBox="0 0 19 13" fill="none">
+                  <path d="M19 0H17V12H19V0Z"/>
+                  <path d="M8.5 6L0 0V12.0574L8.5 6Z"/>
+                  <path d="M17 6L8.5 0V12.0574L17 6Z"/>
+                </svg>
+              </div>
             </div>
           </div>
-          <div class="moves-cont" id="moves"></div>
-          <div class="game-skip">
-            <svg class="" id="back-front" onclick="goBack()" width="19" height="13" viewBox="0 0 19 13" fill="none">
-              <path d="M0 0H2V12H0V0Z" />
-              <path d="M10.5 6L19 0V12.0574L10.5 6Z" />
-              <path d="M2 6L10.5 0V12.0574L2 6Z" />
-            </svg>
-            <svg class="" onclick="goBack(1)" id="back" width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M12 12L3.5 6L12 0V12ZM2 0V12H0V0H2Z" />
-            </svg>
-            <svg class="" id="skip" width="12" onclick="backToNormal(1)" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M0 12L8.5 6L0 0V12ZM10 0V12H12V0H10Z" />
-            </svg>
-            <svg class="" id="skip-last" onclick="backToNormal()" width="19" height="13" viewBox="0 0 19 13" fill="none">
-              <path d="M19 0H17V12H19V0Z"/>
-              <path d="M8.5 6L0 0V12.0574L8.5 6Z"/>
-              <path d="M17 6L8.5 0V12.0574L17 6Z"/>
-            </svg>
+        </div>
+        <div class="stats-cont">
+          <div class="header">
+            <span>Settings</span><div class="close" onclick="closeSideBar(this)"><img src="icons/close.svg" alt=""></div>
+          </div>
+          <div class="outer">
+            <div class="stats">
+              <div class="info settings">
+                <div class="container">
+                  <span>Version</span><span id="version"></span>
+                </div>
+                <hr>
+                <div class="container">
+                  <span>Search Time (ms)</span><input type="number" id="searchTime">
+                </div>
+                <div class="container">
+                  <div class="eval">Use Opening Book</div>
+                  <label class="switch">
+                    <input type="checkbox" checked id="openbook">
+                    <span class="slider round"></span>
+                  </label>                  
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="newgame-outside" onclick="newGame()">New Game</div>
@@ -119,4 +145,6 @@
 <script src="core/dashengine.js"></script>
 <!-- ui -->
 <script src="ui/drawboard.js"></script>
+<!-- json -->
+<script type="text/json" src="settings.json"></script>
 </html>

@@ -12,7 +12,26 @@ window.onbeforeunload = (event) => {
     win.removeAllListeners();
 }
 
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+
 function handleWindowControls() {
+
+    const jsonfile = require('jsonfile') 
+    let data = '{"searchTime": 2500, "useOpenBook": true}'
+    jsonfile.writeFile('./settings.json', JSON.parse(data), {spaces:2}, function(err){
+        if (err) throw err;
+    });
 
     const version = document.getElementById('version');
     
@@ -37,7 +56,7 @@ function handleWindowControls() {
     });
 
     document.getElementById('close-button').addEventListener("click", event => {
-        win.close();
+        win.close()
     });
 
     toggleMaxRestoreButtons();

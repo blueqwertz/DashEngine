@@ -5,6 +5,16 @@ body {
     font-family: "Rubik", sans-serif;
 }
 
+* {
+    user-select: none;
+}
+
+hr {
+    height: 2px;
+    background-color: #424242;
+    border: none;
+}
+
 #titlebar {
     display: block;
     position: fixed;
@@ -140,7 +150,6 @@ body {
 .cont {
     position: absolute;
     width: 40%;
-    min-width: 500px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -152,6 +161,10 @@ body {
     height: 100%;
     position: absolute;
     -webkit-user-drag: none;
+}
+
+#board * {
+    user-select: all;
 }
 
 .piece {
@@ -585,7 +598,7 @@ body {
     top: 100%;
     right: 0%;
     padding: 5px 12px;
-    margin: 15px 0px;
+    margin: 0px 0px;
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
@@ -636,13 +649,18 @@ body {
     width: 100%;
 }
 
-.stats-cont {
+.left {
     position: absolute;
     right: calc(100% + 30px);
     width: 240px;
-    background-color: #363636;
+}
+
+.stats-cont {
+    width: 100%;
+    /* background-color: #363636; */
     font-family: "Rubik", sans-serif;
     transition: opacity .3s;
+    margin-bottom: 15px;
 }
 
 .stats-cont .header {
@@ -652,18 +670,49 @@ body {
     display: flex;
     justify-content: space-between;
     background-color: #3D3C3D;
+    z-index: 2;
 }
 
 .stats-cont .header span {
     margin: 4px 7px;
 }
 
+.stats-cont input {
+    width: 55px;
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translate(5px, -50%);
+    right: 0px;
+    background-color: #424242;
+    outline: none;
+    border: 1px solid #6f85d200;
+    -webkit-appearance: none;
+    color: white;
+    font-family: "Rubik", sans-serif;
+    padding: 2px 5px;
+    font-size: 15px;
+    border-radius: 4px;
+    text-align: right;
+    transition: border .2s;
+}
+
+.stats-cont input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.stats-cont input:focus {
+    border: 1px solid #6F85D2;
+}
+
 .stats-cont .header .close {
     position: relative;
     width: 34px;
     height: 29px;
-    background-color: #E81123;
+    background-color: #ff0000c5;
     cursor: pointer;
+    transition: all .3s;
 }
 
 .stats-cont .header .close img {
@@ -672,10 +721,25 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    transition: all .25s;
+}
+
+.stats-cont.hide .header .close img {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.stats-cont.hide .header .close {
+    /* background-color: rgba(0, 177, 0, 0.637); */
+    background-color: transparent;
 }
 
 .info {
     margin: 10px 0px;
+}
+
+.info.settings .container span {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .info .container {
@@ -683,11 +747,34 @@ body {
     color: white;
     margin: 4px 0px;
     justify-content: space-between;
+    position: relative;
+    height: 20px;
+}
+
+.info.settings .container {
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.outer {
+    overflow: hidden;
+    transition: max-height .3s;
+    max-height: 367px;
+}
+
+.stats-cont.hide .outer .stats {
+    transform: translateY(-100%);
+}
+
+.stats-cont.hide .outer {
+    max-height: 0px !important;
 }
 
 .stats {
-    margin: 4px 10px;
     background-color: #363636;
+    padding: 1px 10px;
+    transition: transform .3s;
 }
 
 ::-webkit-scrollbar {
@@ -764,4 +851,68 @@ body {
     cursor: pointer;
     fill: #AEAEAE;
     pointer-events: all;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+  }
+  
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+  
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #424242;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border: none;
+    transform: translateX(3px);
+}
+  
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    transition: .2s;
+}
+
+input:checked + .slider {
+    background-color: #6F85D2;
+}
+
+.switch .slider {
+    border: none;
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px) translateY(-50%);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }

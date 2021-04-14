@@ -2,8 +2,42 @@ let divboard = document.getElementById("board")
 let divoverlay = document.getElementById("points")
 let lastMovesDiv = document.getElementById("lastMoves")
 
+var settings
 
-let searchTime = 2000
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+readTextFile("./settings.json", function(text){
+    settings = JSON.parse(text);
+    setSettings()
+});
+
+function setSettings() {
+    document.getElementById("searchTime").placeholder = settings.searchTime
+    document.getElementById("openbook").checked = settings.useOpenBook
+
+    isBack = true
+}
+
+
+document.getElementById("searchTime").oninput = () => {
+    if (document.getElementById("searchTime").value.length != 0) {
+        settings.searchTime = parseFloat(document.getElementById("searchTime").value)
+    }
+}
+
+document.getElementById("openbook").oninput = () => {
+    settings.useOpenBook = document.getElementById("openbook").checked
+}
 
 let searchDepth = 6
 
@@ -446,7 +480,7 @@ async function makedisplaymove(ind, show=false) {
                 setTimeout(function() {
                 document.getElementById("searching").classList.add("active")
                 if (!gameOver) {
-                    if (board.movesMade < 5) {
+                    if (board.movesMade < 5 && settings.useOpenBook) {
                         let bestMove = searchMoves(board.moves)
                         bestMove.then(move => {
                             if (move != null) {
@@ -456,7 +490,7 @@ async function makedisplaymove(ind, show=false) {
                         })
                     }
                     else {
-                        let bestMove = Deepening(searchTime)
+                        let bestMove = Deepening(settings.searchTime)
                         bestMove.then(move => {
                             if (move != null) {
                                 curmoves = [move]
@@ -511,7 +545,7 @@ function backToNormal(numMoves=tempMovesMade - movesMade) {
     }
 }
 
-let isBack = true
+let isBack = false
 let movesBack = []
 let tempMovesMade
 
@@ -659,4 +693,15 @@ function convertToPgn(move) {
 
     return result
 
+}
+
+
+function closeSideBar(el) {
+    if (!(el.parentElement.parentElement.classList.toString().includes("hide"))) {
+        console.log(el.parentElement.parentElement.children[1].offsetHeight + "px")
+        el.parentElement.parentElement.children[1].style.maxHeight = el.parentElement.parentElement.children[1].offsetHeight + "px"
+    } else {
+        el.parentElement.parentElement.children[1].style.maxHeight = null
+    }
+    el.parentElement.parentElement.classList.toggle("hide")
 }

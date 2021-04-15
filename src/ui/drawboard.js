@@ -21,23 +21,59 @@ readTextFile("./settings.json", function(text){
     setSettings()
 });
 
+var settingsDiv = document.getElementById("settingsContainer")
+var settingsNames = {"searchtime": "Search Time (ms)", "usebook": "Opening Book", "alpha_beta": "Alpha-Beta Pruning"}
+
+function addSetting(name, value) {
+    function getBetterName(name) {
+        if (settingsNames[name]) {
+            return settingsNames[name]
+        } return name
+    }
+    if (typeof(value) == "boolean") {
+        var checked = value ? "checked" : ""
+        settingsDiv.innerHTML += `<div class="container">
+                                    <div class="eval">${getBetterName(name)}</div>
+                                    <label class="switch">
+                                    <input type="checkbox" ${checked} id="${name}" oninput="settings['${name}'] = this.checked;
+                                    document.getElementById('allSettingsString').innerHTML = JSON.stringify(settings)">
+                                    <span class="slider round"></span>
+                                    </label> 
+                                </div>`
+    } if (typeof(value) == "number") {
+        settingsDiv.innerHTML += `<div class="container">
+                                    <span>${getBetterName(name)}</span><input type="number" id="${name}" value="${value}" max="100000" oninput="settings['${name}'] = parseFloat(this.value);
+                                    document.getElementById('allSettingsString').innerHTML = JSON.stringify(settings)">
+                                </div>`
+    }
+}
 
 function setSettings() {
-    document.getElementById("searchTime").value = settings.searchTime
-    document.getElementById("openbook").checked = settings.useOpenBook
+    for (let key in settings) {
+        if (settings.hasOwnProperty(key)) {
+            addSetting(key, settings[key]);
+        }
+    }
+    document.getElementById('allSettingsString').innerHTML = JSON.stringify(settings)
+    for (let key in settings["ui"]) {
+        console.log(key)
+        if (!settings["ui"][key]) {
+            document.getElementById(key).classList.add("hide")
+        }
+    }
     isBack = true
 }
 
 
-document.getElementById("searchTime").oninput = () => {
-    if (document.getElementById("searchTime").value.length != 0) {
-        settings.searchTime = parseFloat(document.getElementById("searchTime").value)
-    }
-}
+// document.getElementById("searchTime").oninput = () => {
+//     if (document.getElementById("searchTime").value.length != 0) {
+//         settings.searchTime = parseFloat(document.getElementById("searchTime").value)
+//     }
+// }
 
-document.getElementById("openbook").oninput = () => {
-    settings.useOpenBook = document.getElementById("openbook").checked
-}
+// document.getElementById("openbook").oninput = () => {
+//     settings.useOpenBook = document.getElementById("openbook").checked
+// }
 
 let searchDepth = 6
 
@@ -70,8 +106,8 @@ function setupBoard() {
 }
 
 function addPiece(piece, x, y) {
-    let colcode = board.pos[x + y * 8].col == 1 ? "w" : "b"
-    let piececode = getLookup(board.pos[x + y * 8].type, board.pos[x + y * 8].col).toLowerCase()
+    let colcode = piece.col == 1 ? "w" : "b"
+    let piececode = getLookup(piece.type, piece.col).toLowerCase()
     let code = colcode + piececode
     divboard.innerHTML += `<div class="piece ${code}" id="${x + y * 8}" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
 }
@@ -251,6 +287,7 @@ function newGame() {
     setupBoard()
     clearInterval(timer)
     timer = null
+    UpdateButtons()
 }
 
 var curScore
@@ -480,7 +517,7 @@ async function makedisplaymove(ind, show=false) {
                 setTimeout(function() {
                 document.getElementById("searching").classList.add("active")
                 if (!gameOver) {
-                    if (board.movesMade < 5 && settings.useOpenBook) {
+                    if (board.movesMade < 5 && settings["usebook"]) {
                         let bestMove = searchMoves(board.moves)
                         bestMove.then(move => {
                             if (move != null) {
@@ -490,7 +527,7 @@ async function makedisplaymove(ind, show=false) {
                         })
                     }
                     else {
-                        let bestMove = Deepening(settings.searchTime)
+                        let bestMove = Deepening(settings["searchtime"])
                         bestMove.then(move => {
                             if (move != null) {
                                 curmoves = [move]
@@ -698,10 +735,11 @@ function convertToPgn(move) {
 
 function closeSideBar(el) {
     if (!(el.parentElement.parentElement.classList.toString().includes("hide"))) {
-        console.log(el.parentElement.parentElement.children[1].offsetHeight + "px")
         el.parentElement.parentElement.children[1].style.maxHeight = el.parentElement.parentElement.children[1].offsetHeight + "px"
     } else {
         el.parentElement.parentElement.children[1].style.maxHeight = null
     }
+    settings["ui"][el.parentElement.parentElement.id] = el.parentElement.parentElement.classList.toString().includes("hide")
     el.parentElement.parentElement.classList.toggle("hide")
+    document.getElementById('allSettingsString').innerHTML = JSON.stringify(settings)
 }

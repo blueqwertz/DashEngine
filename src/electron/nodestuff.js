@@ -12,10 +12,25 @@ window.onbeforeunload = (event) => {
     win.removeAllListeners();
 }
 
+const jsonfile = require('jsonfile')
 
-function handleWindowControls() {
+async function storeSettings() {
+    return new Promise((resolve) => {
+        resolve(1)
+        let data = document.getElementById("allSettingsString").innerText
+        if (data.length > 0) {
+            jsonfile.writeFile('src/settings.json', JSON.parse(data), {spaces:2}, function(err){
+                if (err) throw err;
+                resolve(1)
+            });
+        } else {
+            resolve(1)
+        }
+    })
+}
 
-    const jsonfile = require('jsonfile') 
+
+async function handleWindowControls() {
 
     const version = document.getElementById('version');
     
@@ -40,11 +55,9 @@ function handleWindowControls() {
     });
 
     document.getElementById('close-button').addEventListener("click", event => {
-        let data = {"searchTime": parseFloat(document.getElementById("searchTime").value), "useOpenBook": document.getElementById("openbook").checked}
-        jsonfile.writeFile('src/settings.json', data, {spaces:2}, function(err){
-            if (err) throw err;
+        storeSettings().then(() => {
             win.close()
-        });
+        })
     });
 
     toggleMaxRestoreButtons();
@@ -67,7 +80,7 @@ if (!isPackaged) {
         if (e.which === 123) {
             remote.getCurrentWindow().toggleDevTools();
         } else if (e.which === 116) {
-            location.reload();
+            location.reload()
         }
     })
 }

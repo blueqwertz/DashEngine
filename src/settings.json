@@ -1,4 +1,9 @@
 {
-  "searchTime": 1500,
-  "useOpenBook": true
+  "searchtime": 2000,
+  "usebook": true,
+  "alpha_beta": true,
+  "ui": {
+    "game_info": false,
+    "settings_info": true
+  }
 }

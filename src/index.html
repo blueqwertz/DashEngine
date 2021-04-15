@@ -49,7 +49,7 @@
     </div>
     <div class="cont">
       <div class="left">
-        <div class="stats-cont">
+        <div class="stats-cont" id="game_info">
           <div class="header">
             <span>Game Info</span><div class="close" onclick="closeSideBar(this)"><img src="icons/close.svg" alt=""></div>
           </div>
@@ -85,27 +85,17 @@
             </div>
           </div>
         </div>
-        <div class="stats-cont">
+        <div class="stats-cont" id="settings_info">
           <div class="header">
             <span>Settings</span><div class="close" onclick="closeSideBar(this)"><img src="icons/close.svg" alt=""></div>
           </div>
           <div class="outer">
             <div class="stats">
-              <div class="info settings">
+              <div class="info settings" id="settingsContainer">
                 <div class="container">
                   <span>Version</span><span id="version"></span>
                 </div>
                 <hr>
-                <div class="container">
-                  <span>Search Time (ms)</span><input type="number" id="searchTime">
-                </div>
-                <div class="container">
-                  <div class="eval">Use Opening Book</div>
-                  <label class="switch">
-                    <input type="checkbox" checked id="openbook">
-                    <span class="slider round"></span>
-                  </label>                  
-                </div>
               </div>
             </div>
           </div>
@@ -132,6 +122,7 @@
         <div class="user cur" id="user-white"><span>You</span><span class="time" id="time-white"></span></div>
     </div>
     <div class="github-link" id="github" title="GitHub Repository"><img src="icons/github.png" alt=""></div>
+    <span style="display: none" id="allSettingsString"></span>
 </body>
 <!-- core -->
 <script src="core/move.js"></script>

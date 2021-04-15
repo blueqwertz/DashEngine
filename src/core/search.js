@@ -85,7 +85,12 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
     
     for (let move of moves) {
         board.makeMove(move)
-        let eval = minimax(depth - 1, board.col == 0, negativeInfinity, infinity, 0)
+        let eval = null
+        if (settings.alpha_beta) {
+            eval = alpha_beta(depth - 1, board.col == 0, negativeInfinity, infinity, 0)
+        } else {
+            eval = minimax(depth - 1, board.col == 0, 0)
+        }
         // let eval = negamax(depth - 1, isBlack, negativeInfinity, infinity)
         board.unmakeMove(move)
         if (eval == null) {
@@ -132,54 +137,7 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
         return arr
     }
 
-    function negamax(depth, isBlack, alpha, beta) {
-
-        let alphaOrig = alpha
-        let ttEntry = tt.lookup(board.hash)
-        
-        if (ttEntry != null) {
-            if (ttEntry[1] >= depth) {
-                if (ttEntry[2] == EXACT) {
-                    return ttEntry[0]
-                } else if (ttEntry[2] == LOWERBOUND) {
-                    aplha = Math.max(alpha, ttEntry[0])
-                } else if (ttEntry[2] == UPPERBOUND) {
-                    beta = Math.min(beta, ttEntry[0])
-                }
-
-                if (alpha >= beta) {
-                    return ttEntry[0]
-                }
-            }
-        }
-
-        if (depth == 0) {
-            return isBlack ? Evaluate() : -Evaluate()
-        }
-
-        let bestVal = negativeInfinity
-        let moves = orderMoves(movegenerator.generateMoves())
-
-        if (moves.length == 0) {
-            return negativeInfinity
-        }
-
-        for (let move of moves) {
-            board.makeMove(move)
-            bestVal = Math.max(bestVal, -negamax(depth - 1, !isBlack, -beta, -alpha))
-            board.unmakeMove(move)
-            alpha = Math.max(alpha, bestVal)
-            if (alpha >= beta) {
-                break
-            }
-        }
-        // let flag = bestVal <= alphaOrig ? UPPERBOUND : bestVal >= beta ? LOWERBOUND : EXACT
-        // tt.store(board.hash, bestVal, depth, flag)
-
-        return bestVal
-    }
-
-    function minimax(depth, ismaximising, alpha, beta, plyFromRoot) {
+    function minimax(depth, ismaximising, plyFromRoot) {
 
         var ttEntry = tt.lookup(board.hash)
         if (ttEntry != null) {
@@ -210,7 +168,65 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
             for (let i = 0; i < moves.length; i++) {
                 let move = moves[i]
                 board.makeMove(move)
-                let eval = minimax(depth - 1, false, alpha, beta, plyFromRoot + 1)
+                let eval = minimax(depth - 1, false, plyFromRoot + 1)
+                board.unmakeMove(move)
+                maxeval = Math.max(eval, maxeval)
+            }
+            tt.store(board.hash, maxeval, plyFromRoot)
+            return maxeval
+        } else {
+            if (moves.length == 0) {
+                if (movegenerator.generateAttacksAndPins().checked.length > 0) {
+                    return infinity
+                } else {
+                    return 0
+                }
+            }
+            let mineval = infinity
+            for (let i = 0; i < moves.length; i++) {
+                let move = moves[i]
+                board.makeMove(move)
+                let eval = minimax(depth - 1, true, plyFromRoot + 1)
+                board.unmakeMove(move)
+                mineval = Math.min(eval, mineval)
+            }
+            tt.store(board.hash, mineval, plyFromRoot)
+            return mineval
+        }
+    }
+
+    function alpha_beta(depth, ismaximising, alpha, beta, plyFromRoot) {
+
+        var ttEntry = tt.lookup(board.hash)
+        if (ttEntry != null) {
+            if (ttEntry[1] >= plyFromRoot) {
+                return ttEntry[0]
+            }
+        }
+
+        if (depth == 0) {
+            return Evaluate()
+        }
+
+        if (Date.now() - start >= timeRemaining) {
+            return null
+        }
+
+        let moves = orderMoves(movegenerator.generateMoves())
+
+        if (ismaximising) {
+            if (moves.length == 0) {
+                if (movegenerator.generateAttacksAndPins().checked.length > 0) {
+                    return negativeInfinity
+                } else {
+                    return 0
+                }
+            }
+            let maxeval = negativeInfinity
+            for (let i = 0; i < moves.length; i++) {
+                let move = moves[i]
+                board.makeMove(move)
+                let eval = alpha_beta(depth - 1, false, alpha, beta, plyFromRoot + 1)
                 board.unmakeMove(move)
                 alpha = Math.max(alpha, eval)
                 if (beta <= alpha) {
@@ -232,7 +248,7 @@ function Search(depth=1, searchScore=false, timeRemaining=999999) {
             for (let i = 0; i < moves.length; i++) {
                 let move = moves[i]
                 board.makeMove(move)
-                let eval = minimax(depth - 1, true, alpha, beta, plyFromRoot + 1)
+                let eval = alpha_beta(depth - 1, true, alpha, beta, plyFromRoot + 1)
                 board.unmakeMove(move)
                 beta = Math.min(beta, eval)
                 if (beta <= alpha) {

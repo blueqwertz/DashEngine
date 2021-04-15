@@ -35,7 +35,7 @@ async function searchMoves(movesPlayed) {
         }
     }
     if (posMoves.length ==0) {
-        return await Deepening(settings.searchTime)
+        return await Deepening(settings["searchtime"])
     }
     let randomInd = Math.floor(Math.random() * (posMoves.length - 1))
     curInd = randomInd

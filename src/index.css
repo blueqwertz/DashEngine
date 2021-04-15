@@ -657,11 +657,16 @@ hr {
 
 .stats-cont {
     width: 100%;
+    float: right;
     /* background-color: #363636; */
     font-family: "Rubik", sans-serif;
-    transition: opacity .3s;
+    transition: opacity .3s, width .3s;
     margin-bottom: 15px;
 }
+
+/* .stats-cont.hide {
+    width: 130px;
+} */
 
 .stats-cont .header {
     width: 100%;
@@ -735,6 +740,10 @@ hr {
 
 .info {
     margin: 10px 0px;
+}
+
+.info.settings .container {
+    cursor: pointer;
 }
 
 .info.settings .container span {
@@ -894,6 +903,7 @@ hr {
     transform: translateY(-50%);
     background-color: white;
     transition: .2s;
+    transition: transform .3s;
 }
 
 input:checked + .slider {

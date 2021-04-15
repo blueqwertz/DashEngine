@@ -1,4 +1,4 @@
 {
-    "searchTime": 2000,
-    "useOpenBook": false
+  "searchTime": 1500,
+  "useOpenBook": true
 }

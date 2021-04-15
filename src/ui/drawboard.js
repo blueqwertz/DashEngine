@@ -21,10 +21,10 @@ readTextFile("./settings.json", function(text){
     setSettings()
 });
 
-function setSettings() {
-    document.getElementById("searchTime").placeholder = settings.searchTime
-    document.getElementById("openbook").checked = settings.useOpenBook
 
+function setSettings() {
+    document.getElementById("searchTime").value = settings.searchTime
+    document.getElementById("openbook").checked = settings.useOpenBook
     isBack = true
 }
 

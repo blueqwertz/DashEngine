@@ -1,9 +1,9 @@
 {
-  "searchtime": 2000,
-  "usebook": true,
-  "alpha_beta": true,
-  "ui": {
-    "game_info": true,
-    "settings_info": true
-  }
+    "searchtime": 2000,
+    "usebook": false,
+    "alpha_beta": false,
+    "ui": {
+        "game_info": false,
+        "settings_info": false
+    }
 }

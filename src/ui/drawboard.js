@@ -26,6 +26,7 @@ var settingsNames = {
     searchtime: "Search Time (ms)",
     usebook: "Opening Book",
     alpha_beta: "Alpha-Beta Pruning",
+    darkmode: "Dark Mode",
 }
 
 function addSetting(name, value) {
@@ -62,7 +63,6 @@ function setSettings() {
     }
     document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
     for (let key in settings["ui"]) {
-        console.log(key)
         if (!settings["ui"][key]) {
             document.getElementById(key).classList.add("hide")
         }

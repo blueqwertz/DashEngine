@@ -12,7 +12,7 @@ window.onbeforeunload = (event) => {
     win.removeAllListeners()
 }
 
-const jsonfile = require("jsonfile")
+const fs = require("fs")
 
 var settingsContent
 
@@ -21,9 +21,8 @@ async function storeSettings() {
         let data = document.getElementById("allSettingsString").innerText
         if (data.length > 0) {
             console.log(data)
-            jsonfile.writeFile("src/settings.json", JSON.parse(data), { spaces: 2 }, function (err) {
-                if (err) throw err
-                resolve(1)
+            fs.writeFile("src/settings.json", data, function (err) {
+                if (err) return console.log(err)
             })
         } else {
             resolve(1)

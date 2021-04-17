@@ -3,7 +3,7 @@
   "usebook": true,
   "alpha_beta": true,
   "ui": {
-    "game_info": false,
+    "game_info": true,
     "settings_info": true
   }
 }

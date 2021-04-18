@@ -28,6 +28,7 @@ var settingsNames = {
     usebook: "Opening Book",
     alpha_beta: "Alpha-Beta Pruning",
     darkmode: "Dark Mode",
+    timer: "Game Time (s)",
 }
 
 function addSetting(name, value) {
@@ -50,7 +51,7 @@ function addSetting(name, value) {
     }
     if (typeof value == "number") {
         settingsDiv.innerHTML += `<div class="container">
-                                    <span>${getBetterName(name)}</span><input type="number" id="${name}" value="${value}" max="100000" oninput="settings['${name}'] = parseFloat(this.value);
+                                    <span>${getBetterName(name)}</span><input type="number" id="${name}" value="${value}" max="100000" oninput="settings['${name}'] = parseFloat(this.value) || 0;
                                     document.getElementById('allSettingsString').innerHTML = JSON.stringify(settings)">
                                 </div>`
     }
@@ -100,6 +101,22 @@ function setSettings() {
                 }
             })
         }
+    }
+
+    timeall = parseFloat(document.getElementById("timer").value) || 0
+    changeTime(timeall, 0)
+    changeTime(timeall, 1)
+    timewhite = timeall
+    timeblack = timeall
+
+    document.getElementById("timer").oninput = () => {
+        timeall = parseFloat(document.getElementById("timer").value) || 0
+        timewhite = timeall
+        timeblack = timeall
+        changeTime(timeall, 0)
+        changeTime(timeall, 1)
+        settings["timer"] = parseFloat(document.getElementById("timer").value) || 0
+        document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
     }
 
     isBack = true
@@ -313,6 +330,7 @@ function newGame() {
     timeblack = timeall
     changeTime(timeall, 0)
     changeTime(timeall, 1)
+    document.getElementById("timer").parentElement.classList.remove("inactive")
     movesMade = 0
     lasttimestart = new Date()
     gameOver = false
@@ -327,7 +345,8 @@ function newGame() {
 var curScore
 var ycoord
 
-function changeTime(time, col) {
+function changeTime(timestart, col) {
+    let time = timestart
     let minutes = Math.floor(time / 60)
     let seconds = makeFull(Math.floor(time - minutes * 60))
 
@@ -340,16 +359,22 @@ function changeTime(time, col) {
             milli = 0
         }
         if (col == 1) {
-            if (time < 10) {
+            if (timestart < 10 && timer != null) {
                 document.getElementById("time-white").classList.add("low")
+                document.getElementById("time-black").classList.remove("low")
+            } else {
+                document.getElementById("time-black").classList.remove("low")
                 document.getElementById("time-black").classList.remove("low")
             }
             document.getElementById("time-white").innerHTML = seconds + "." + milli
             return
         }
-        if (time < 10) {
+        if (timestart < 10 && timer != null) {
             document.getElementById("time-black").classList.add("low")
             document.getElementById("time-white").classList.remove("low")
+        } else {
+            document.getElementById("time-white").classList.remove("low")
+            document.getElementById("time-black").classList.remove("low")
         }
         document.getElementById("time-black").innerHTML = seconds + "." + milli
 
@@ -433,6 +458,7 @@ function updateTime() {
         document.getElementById("time-black").classList.remove("low")
         document.getElementById("time-white").classList.remove("low")
         clearInterval(timer)
+        document.getElementById("timer").parentElement.classList.remove("inactive")
         timer = null
     }
 }
@@ -467,6 +493,7 @@ async function makedisplaymove(ind, show = false) {
     board.movesMade += 1 / 2
     if (timer == null) {
         lasttimestart = new Date()
+        document.getElementById("timer").parentElement.classList.add("inactive")
         timer = setInterval(function () {
             updateTime()
         }, 100)

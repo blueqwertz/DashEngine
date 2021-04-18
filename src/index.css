@@ -8,7 +8,7 @@ body {
     --main-bg: #363536;
     --element-bg: #363636;
     --font-color: #fff;
-    --font-inactive: #8d8d8d;
+    --font-inactive: #828282;
     --moves-cont-bg: #424242;
     --skip-button-active: #acacac;
     --skip-button-inactive: #6d6d6d;
@@ -37,7 +37,7 @@ body.light {
     --skip-button-active: #a6a6a6;
     --skip-button-inactive: #dad8d8;
     --skip-button-hover: #6d6d6d;
-    --switch-button: #869ae6;
+    --switch-button: #6f85d2;
     --titlebar: #9d9d9d;
     --button-hover: rgba(255, 255, 255, 0.1);
     --button-active: rgba(255, 255, 255, 0.2);
@@ -930,6 +930,12 @@ hr {
     transition: border 0.2s;
 }
 
+.container.inactive,
+.container.inactive input {
+    color: var(--font-inactive) !important;
+    pointer-events: none;
+}
+
 .stats-cont input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
@@ -1128,7 +1134,7 @@ hr {
     left: 3px;
     top: 50%;
     transform: translateY(-50%);
-    background-color: var(--font-color);
+    background-color: white;
     transition: 0.2s;
     transition: transform 0.3s;
 }

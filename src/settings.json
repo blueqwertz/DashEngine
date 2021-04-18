@@ -1,5 +1,6 @@
 {
     "searchtime": 2600,
+    "timer": 600,
     "usebook": true,
     "alpha_beta": true,
     "darkmode": true,

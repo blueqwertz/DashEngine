@@ -1,28 +1,20 @@
 const remote = require("electron").remote
-const { ipcRenderer } = require("electron")
 const win = remote.getCurrentWindow()
-
 document.onreadystatechange = (event) => {
     if (document.readyState == "complete") {
         handleWindowControls()
     }
 }
 
-window.onbeforeunload = (event) => {
-    win.removeAllListeners()
-}
-
 const fs = require("fs")
-
-var settingsContent
 
 async function storeSettings() {
     return new Promise((resolve) => {
         let data = document.getElementById("allSettingsString").innerText
         if (data.length > 0) {
-            console.log(data)
             fs.writeFile("src/settings.json", data, function (err) {
                 if (err) return console.log(err)
+                resolve(1)
             })
         } else {
             resolve(1)
@@ -30,7 +22,7 @@ async function storeSettings() {
     })
 }
 
-async function handleWindowControls() {
+function handleWindowControls() {
     const version = document.getElementById("version")
 
     version.innerHTML = remote.version
@@ -51,10 +43,11 @@ async function handleWindowControls() {
 
     var target = document.getElementById("allSettingsString")
     var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
+        mutations.forEach(function () {
             storeSettings()
         })
     })
+
     var config = { attributes: true, childList: true, characterData: true }
     observer.observe(target, config)
 
@@ -62,8 +55,10 @@ async function handleWindowControls() {
         win.unmaximize()
     })
 
-    document.getElementById("close-button").addEventListener("click", (event) => {
-        win.close()
+    document.getElementById("close-button").addEventListener("click", async (event) => {
+        await storeSettings().then(() => {
+            win.close()
+        })
     })
 
     toggleMaxRestoreButtons()

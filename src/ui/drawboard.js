@@ -3,6 +3,7 @@ let divoverlay = document.getElementById("points")
 let lastMovesDiv = document.getElementById("lastMoves")
 
 var settings
+var pieceArr = new Array()
 
 function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest()
@@ -67,18 +68,42 @@ function setSettings() {
             document.getElementById(key).classList.add("hide")
         }
     }
+
+    if (!settings["darkmode"]) {
+        document.body.classList.add("light")
+    }
+
+    async function waitForUserInput() {
+        return new Promise((resolve) => {
+            document.getElementById("cancel").onclick = () => {
+                settings["darkmode"] = true
+                resolve(0)
+            }
+            document.getElementById("yes").onclick = () => {
+                resolve(1)
+            }
+        })
+    }
+
+    document.getElementById("darkmode").oninput = async () => {
+        if (document.getElementById("darkmode").checked) {
+            document.body.classList.remove("light")
+        } else {
+            document.getElementById("dark_warn").classList.add("active")
+            await waitForUserInput().then((data) => {
+                if (data == 1) {
+                    document.body.classList.add("light")
+                    document.getElementById("dark_warn").classList.remove("active")
+                } else {
+                    document.getElementById("dark_warn").classList.remove("active")
+                    document.getElementById("darkmode").checked = true
+                }
+            })
+        }
+    }
+
     isBack = true
 }
-
-// document.getElementById("searchTime").oninput = () => {
-//     if (document.getElementById("searchTime").value.length != 0) {
-//         settings.searchTime = parseFloat(document.getElementById("searchTime").value)
-//     }
-// }
-
-// document.getElementById("openbook").oninput = () => {
-//     settings.useOpenBook = document.getElementById("openbook").checked
-// }
 
 let searchDepth = 6
 
@@ -92,7 +117,7 @@ function setupBoard() {
     for (let i = 63; i > -1; i--) {
         x = 7 - (i % 8)
         y = Math.floor(i / 8)
-        if ((x + y) % 2 == 0) {
+        if ((x + y) % 2 != 0) {
             document.getElementById("boardbg").innerHTML += `<div class="file light" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
         } else {
             document.getElementById("boardbg").innerHTML += `<div class="file dark" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
@@ -114,7 +139,9 @@ function addPiece(piece, x, y) {
     let colcode = piece.col == 1 ? "w" : "b"
     let piececode = getLookup(piece.type, piece.col).toLowerCase()
     let code = colcode + piececode
-    divboard.innerHTML += `<div class="piece ${code}" id="${x + y * 8}" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
+    divboard.innerHTML += `<div class="piece ${code}" id="${x + y * 8}"></div>`
+    pieceArr.push(document.getElementById(x + y * 8))
+    pieceArr
 }
 
 let curmoves = []
@@ -196,19 +223,19 @@ function dragElement(elmnt) {
     }
 
     function closeDragElement(e) {
+        elmnt.removeAttribute("style")
         var dist = Math.sqrt(Math.abs(startX - e.clientX) ** 2 + Math.abs(startY - e.clientY) ** 2)
         if (dist > 20) {
             lookMove(file, rank)
         }
         let x = elmnt.id % 8
         let y = 7 - Math.floor(elmnt.id / 8)
-        elmnt.style.transform = `translate(${x * 100}%, ${y * 100}%)`
         elmnt.classList.remove("grab")
         document.onmouseup = null
         document.onmousemove = null
         setTimeout(function () {
             elmnt.classList.remove("noTrans")
-        }, 200)
+        }, 10)
     }
 
     function lookMove(file, rank) {
@@ -220,11 +247,6 @@ function dragElement(elmnt) {
                 found = true
                 break
             }
-        }
-        if (!found) {
-            let x = elmnt.id % 8
-            let y = 7 - Math.floor(elmnt.id / 8)
-            elmnt.style.transform = `translate(${x * 100}%, ${y * 100}%)`
         }
     }
 
@@ -458,9 +480,11 @@ async function makedisplaymove(ind, show = false) {
     }
 
     board.movesHistory.push(move)
-    if (move.promotionType != null && board.col == 1) {
-        let promTypes = [5, 2, 4, 3]
-        move.promotionType = promTypes[await choosePromotion(move.startSq % 8)]
+    if (!show) {
+        if (move.promotionType != null && board.col == 1) {
+            let promTypes = [5, 2, 4, 3]
+            move.promotionType = promTypes[await choosePromotion(move.startSq % 8)]
+        }
     }
 
     async function choosePromotion(file) {
@@ -517,7 +541,6 @@ async function makedisplaymove(ind, show = false) {
     if (move.castle != null) {
         let x = move.castle[1] % 8
         let y = Math.floor(move.castle[1] / 8)
-        document.getElementById(move.castle[0]).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
         document.getElementById(move.castle[0]).id = move.castle[1]
     }
     board.makeMove(move)
@@ -525,7 +548,6 @@ async function makedisplaymove(ind, show = false) {
     let y = Math.floor(move.endSq / 8)
     lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
     lastMovesDiv.innerHTML += `<div class="content lastmovestart" style="transform: translate(${((move.startSq % 8) - 1) * 100}%, ${(7 - Math.floor(move.startSq / 8)) * 100}%)"></div>`
-    document.getElementById(move.startSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
     document.getElementById(move.startSq).id = move.endSq
 
     UpdateButtons(tempMovesMade == null ? movesMade : tempMovesMade, movesMade)
@@ -581,10 +603,8 @@ function UpdateButtons(movesMade, curMove) {
 }
 
 function backToNormal(numMoves = tempMovesMade - movesMade) {
-    let i = 1
-    if (numMoves == null) {
-        numMoves = movesBack.length - 1
-    }
+    numMoves = Math.min(numMoves, tempMovesMade - movesMade)
+    console.log(numMoves)
     for (let i = 0; i < numMoves; i++) {
         curmoves = [movesBack.pop()]
         makedisplaymove(0, true)
@@ -606,8 +626,8 @@ function goBack(numMoves = movesMade) {
     }
     isBack = false
     document.getElementById("board").classList.add("back")
+    numMoves = Math.min(numMoves, movesMade)
     for (let i = 0; i < numMoves; i++) {
-        movesMade--
         unmakedisplaymove()
     }
     document.getElementById("board").classList.remove("back")
@@ -623,6 +643,8 @@ function unmakedisplaymove() {
     if (board.movesHistory.length < 1) {
         return false
     }
+
+    movesMade--
 
     lastMovesDiv.innerHTML = ""
 
@@ -643,8 +665,11 @@ function unmakedisplaymove() {
     lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`
     lastMovesDiv.innerHTML += `<div class="content lastmovestart" style="transform: translate(${((move.endSq % 8) - 1) * 100}%, ${(7 - Math.floor(move.endSq / 8)) * 100}%)"></div>`
 
-    document.getElementById(move.endSq).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
     document.getElementById(move.endSq).id = move.startSq
+
+    if (move.promotionType != null) {
+        document.getElementById(move.endSq).classList = "piece" + board.pos[x + y * 8].col == 0 ? "b" : "w" + "p"
+    }
 
     if (move.attack != null) {
         addPiece(move.attack, move.attack.pos % 8, ~~(move.attack.pos / 8))
@@ -661,7 +686,6 @@ function unmakedisplaymove() {
     if (move.castle != null) {
         let x = move.castle[0] % 8
         let y = Math.floor(move.castle[0] / 8)
-        document.getElementById(move.castle[1]).style = `transform: translate(${x * 100}%, ${(7 - y) * 100}%)`
         document.getElementById(move.castle[1]).id = move.castle[0]
     }
 
@@ -752,4 +776,32 @@ function closeSideBar(el) {
     settings["ui"][el.parentElement.parentElement.id] = el.parentElement.parentElement.classList.toString().includes("hide")
     el.parentElement.parentElement.classList.toggle("hide")
     document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
+}
+
+function listAllEventListeners() {
+    let elements = []
+    const allElements = document.querySelectorAll("*")
+    const types = []
+    for (let ev in window) {
+        if (/^on/.test(ev)) types[types.length] = ev
+    }
+
+    for (let i = 0; i < allElements.length; i++) {
+        const currentElement = allElements[i]
+        for (let j = 0; j < types.length; j++) {
+            if (typeof currentElement[types[j]] === "function") {
+                elements.push({
+                    node: currentElement,
+                    listeners: [
+                        {
+                            type: types[j],
+                            func: currentElement[types[j]].toString(),
+                        },
+                    ],
+                })
+            }
+        }
+    }
+
+    return elements.filter((element) => element.listeners.length)
 }

@@ -103,6 +103,10 @@ function setSettings() {
         }
     }
 
+    if (!settings["darkmode"]) {
+        body.classList.add("light")
+    }
+
     timeall = parseFloat(document.getElementById("timer").value) || 0
     changeTime(timeall, 0)
     changeTime(timeall, 1)
@@ -345,11 +349,9 @@ function newGame() {
 var curScore
 var ycoord
 
-function changeTime(timestart, col) {
-    let time = timestart
+function formatTime(time) {
     let minutes = Math.floor(time / 60)
     let seconds = makeFull(Math.floor(time - minutes * 60))
-
     if (minutes == 0) {
         let seconds = Math.floor(time)
         time -= seconds
@@ -358,34 +360,38 @@ function changeTime(timestart, col) {
             seconds++
             milli = 0
         }
-        if (col == 1) {
-            if (timestart < 10 && timer != null) {
-                document.getElementById("time-white").classList.add("low")
-                document.getElementById("time-black").classList.remove("low")
-            } else {
-                document.getElementById("time-black").classList.remove("low")
-                document.getElementById("time-black").classList.remove("low")
-            }
-            document.getElementById("time-white").innerHTML = seconds + "." + milli
-            return
-        }
-        if (timestart < 10 && timer != null) {
-            document.getElementById("time-black").classList.add("low")
-            document.getElementById("time-white").classList.remove("low")
-        } else {
-            document.getElementById("time-white").classList.remove("low")
-            document.getElementById("time-black").classList.remove("low")
-        }
-        document.getElementById("time-black").innerHTML = seconds + "." + milli
-
-        return
+        return seconds + "." + milli
     }
+    return minutes + ":" + seconds
+}
+
+function changeTime(time, col) {
+    let format = formatTime(time)
 
     if (col == 1) {
-        document.getElementById("time-white").innerHTML = minutes + ":" + seconds
+        document.getElementById("time-white").innerHTML = format
         return
     }
-    document.getElementById("time-black").innerHTML = minutes + ":" + seconds
+    document.getElementById("time-black").innerHTML = format
+
+    if (col == 1) {
+        if (time < 10 && timer != null) {
+            document.getElementById("time-white").classList.add("low")
+            document.getElementById("time-black").classList.remove("low")
+        } else {
+            document.getElementById("time-black").classList.remove("low")
+            document.getElementById("time-black").classList.remove("low")
+        }
+        document.getElementById("time-white").innerHTML = seconds + "." + milli
+        return
+    }
+    if (time < 10 && timer != null) {
+        document.getElementById("time-black").classList.add("low")
+        document.getElementById("time-white").classList.remove("low")
+    } else {
+        document.getElementById("time-white").classList.remove("low")
+        document.getElementById("time-black").classList.remove("low")
+    }
 }
 
 changeTime(timeall, 1)

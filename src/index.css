@@ -25,6 +25,8 @@ body {
     --selector-focus: #fff;
     --scoll-thumb: #222222;
 
+    --hr: #424242;
+
     --transition-time: 0.2s;
 }
 
@@ -48,6 +50,7 @@ body.light {
     --selector-bg: #a3a3a3;
     --selector-focus: #8e8e8e;
     --scoll-thumb: #b4b4b4;
+    --hr: #d3d3d3;
 }
 
 *,
@@ -58,7 +61,7 @@ body.light {
 
 hr {
     height: 2px;
-    background-color: var(--moves-cont-bg);
+    background-color: var(--hr);
     border: none;
 }
 
@@ -902,7 +905,7 @@ hr {
     color: var(--font-color);
     display: flex;
     justify-content: space-between;
-    background-color: var(--element-bg);
+    background-color: var(--moves-cont-bg);
     z-index: 2;
 }
 

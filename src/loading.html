@@ -1,89 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400&display=swap" rel="stylesheet">
-    <title>DashEngine Updater</title>
-</head>
-<body>
-    <img src="logo.gif" alt="" class="logo">
-    <div class="info">
-        <label for="download" id="message" class="message">Checking For Updates!</label>
-        <progress id="bar" class="bar" max="100" value="0"></progress>
-    </div>
-    <div class="drag"></div>
-</body>
-<style>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400&display=swap" rel="stylesheet" />
+        <title>DashEngine Updater</title>
+    </head>
+    <body>
+        <img src="icon.ico" alt="" class="logo" />
+        <div class="info">
+            <label for="download" id="message" class="message">Checking For Updates!</label>
+            <progress id="bar" class="bar" max="100" value="0"></progress>
+        </div>
+        <div class="drag"></div>
+    </body>
+    <style>
+        body {
+            user-select: none;
+            font-family: "Rubik", sans-serif;
+            color: white;
+        }
 
-body {
-    user-select: none;
-    font-family: "Rubik", sans-serif;
-    color: white;
-}
+        .drag {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            -webkit-app-region: drag;
+            z-index: 3;
+        }
 
-.drag {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    -webkit-app-region: drag;
-    z-index: 3;
-}
+        .logo {
+            width: 100px;
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-.logo {
-    width: 100px;
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+        .info {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            width: 70%;
+            transform: translateX(-50%);
+        }
 
-.info {
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    width: 70%;
-    transform: translateX(-50%);
-}
+        .bar {
+            width: 100%;
+            height: 6px;
+            border: none;
+            overflow: hidden;
+        }
 
-.bar {
-    width: 100%;
-    height: 6px;
-    border: none;
-    overflow: hidden;
-}
+        .bar::-webkit-progress-bar {
+            background-color: #4c4f53;
+        }
 
-.bar::-webkit-progress-bar {
-    background-color: #4c4f53;
-}
+        .bar::-webkit-progress-value {
+            background-color: #737f8d;
+        }
 
-.bar::-webkit-progress-value {
-    background-color: #737F8D;
-}
+        .info .message {
+            margin-top: 10px;
+            font-size: 19px;
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 20px;
+        }
 
-.info .message {
-    margin-top: 10px;
-    font-size: 19px;
-    position: relative;
-    display: inline-block;
-    white-space: nowrap;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 20px;
-}
+        .info .rate {
+            margin-top: 5px;
+            font-size: 12px;
+        }
 
-.info .rate {
-    margin-top: 5px;
-    font-size: 12px;
-}
-
-.hidden {
-    display: none;
-}
-
-</style>
+        .hidden {
+            display: none;
+        }
+    </style>
 </html>

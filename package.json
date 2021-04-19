@@ -1,68 +1,68 @@
 {
-  "name": "dashengine-electron",
-  "productName": "DashEngine",
-  "version": "1.0.1",
-  "description": "Chess Engine",
-  "main": "src/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/blueqwertz/DashEngine.git"
-  },
-  "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "build": "electron-builder build --win --publish never",
-    "deploy": "electron-builder build --win --publish always"
-  },
-  "keywords": [],
-  "author": "Tim Limlei",
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "dashengine_electron"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
+    "name": "dashengine-electron",
+    "productName": "DashEngine",
+    "version": "1.0.2",
+    "description": "Chess Engine",
+    "main": "src/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/blueqwertz/DashEngine.git"
+    },
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "echo \"No linting configured\"",
+        "build": "electron-builder build --win --publish never",
+        "deploy": "electron-builder build --win --publish always"
+    },
+    "keywords": [],
+    "author": "Tim Limlei",
+    "license": "MIT",
+    "config": {
+        "forge": {
+            "packagerConfig": {},
+            "makers": [
+                {
+                    "name": "@electron-forge/maker-squirrel",
+                    "config": {
+                        "name": "dashengine_electron"
+                    }
+                },
+                {
+                    "name": "@electron-forge/maker-zip",
+                    "platforms": [
+                        "darwin"
+                    ]
+                },
+                {
+                    "name": "@electron-forge/maker-deb",
+                    "config": {}
+                },
+                {
+                    "name": "@electron-forge/maker-rpm",
+                    "config": {}
+                }
+            ]
         }
-      ]
+    },
+    "dependencies": {
+        "electron-is-packaged": "^1.0.2",
+        "electron-log": "^4.3.2",
+        "electron-updater": "^4.3.8",
+        "fs": "0.0.1-security",
+        "jsonfile": "^6.1.0",
+        "uaup-js": "0.0.22",
+        "update-electron-app": "^2.0.1"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^6.0.0-beta.54",
+        "@electron-forge/maker-deb": "^6.0.0-beta.54",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+        "@electron-forge/maker-zip": "^6.0.0-beta.54",
+        "electron": "^12.0.0",
+        "electron-builder": "^22.10.5"
     }
-  },
-  "dependencies": {
-    "electron-is-packaged": "^1.0.2",
-    "electron-log": "^4.3.2",
-    "electron-updater": "^4.3.8",
-    "fs": "0.0.1-security",
-    "jsonfile": "^6.1.0",
-    "uaup-js": "0.0.22",
-    "update-electron-app": "^2.0.1"
-  },
-  "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.54",
-    "@electron-forge/maker-deb": "^6.0.0-beta.54",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "electron": "^12.0.0",
-    "electron-builder": "^22.10.5"
-  }
 }

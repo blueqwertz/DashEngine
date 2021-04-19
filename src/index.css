@@ -29,7 +29,7 @@ body {
 }
 
 body.light {
-    --main-bg: #d4d4d4;
+    --main-bg: #f7f7f7;
     --element-bg: #f0f0f0;
     --font-color: #6d6d6d;
     --font-inactive: #aaaaaa;

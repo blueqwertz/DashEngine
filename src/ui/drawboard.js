@@ -164,7 +164,6 @@ function addPiece(piece, x, y) {
     let code = colcode + piececode
     divboard.innerHTML += `<div class="piece ${code}" id="${x + y * 8}"></div>`
     pieceArr.push(document.getElementById(x + y * 8))
-    pieceArr
 }
 
 let curmoves = []
@@ -647,19 +646,32 @@ function addDrag() {
 }
 
 function backToNormal(numMoves = tempMovesMade - movesMade) {
+    // if (numMoves == 1) {
+    //     numMoves = 2 - (movesMade % 2)
+    // }
     numMoves = Math.min(numMoves, tempMovesMade - movesMade)
     document.getElementById("board").classList.add("back")
-    for (let i = 0; i < numMoves; i++) {
+    if (numMoves > 0) {
         curmoves = [movesBack.pop()]
         makedisplaymove(0, true)
     }
+    let i = 1
+    let make = setInterval(() => {
+        if (i < numMoves) {
+            curmoves = [movesBack.pop()]
+            makedisplaymove(0, true)
+        } else {
+            if (movesMade == tempMovesMade) {
+                isBack = true
+                addDrag()
+            } else {
+                isBack = false
+            }
+            clearInterval(make)
+        }
+        i++
+    }, 150)
     document.getElementById("board").classList.remove("back")
-    if (movesMade == tempMovesMade) {
-        isBack = true
-        addDrag()
-    } else {
-        isBack = false
-    }
 }
 
 let isBack = false
@@ -670,19 +682,25 @@ function goBack(numMoves = movesMade) {
     if (isBack) {
         tempMovesMade = movesMade
     }
+    // if (numMoves == 1) {
+    //     numMoves = 2 - (movesMade % 2)
+    // }
     isBack = false
     document.getElementById("board").classList.add("back")
     numMoves = Math.min(numMoves, movesMade)
-    for (let i = 0; i < numMoves; i++) {
+    if (numMoves > 0) {
         unmakedisplaymove()
     }
+    let i = 1
+    let make = setInterval(() => {
+        if (i < numMoves) {
+            unmakedisplaymove()
+        } else {
+            clearInterval(make)
+        }
+        i++
+    }, 150)
     document.getElementById("board").classList.remove("back")
-}
-
-async function sleep(ms) {
-    setTimeout((resolve) => {
-        resolve(1)
-    }, ms)
 }
 
 function unmakedisplaymove() {
@@ -718,16 +736,20 @@ function unmakedisplaymove() {
     }
 
     if (move.attack != null) {
-        addPiece(move.attack, move.attack.pos % 8, ~~(move.attack.pos / 8))
-        if (board.pos[move.attack.pos].col == 1) {
-            dragElement(document.getElementById(move.attack.pos))
-        }
+        setTimeout(() => {
+            addPiece(move.attack, move.attack.pos % 8, ~~(move.attack.pos / 8))
+            if (board.pos[move.attack.pos].col == 1) {
+                dragElement(document.getElementById(move.attack.pos))
+            }
+        }, 100)
     }
     if (move.enPassant != null) {
-        addPiece(move.enPassant, move.enPassant.pos % 8, ~~(move.enPassant.pos / 8))
-        if (board.pos[move.enPassant.pos].col == 1) {
-            dragElement(document.getElementById(move.attack.pos))
-        }
+        setTimeout(() => {
+            addPiece(move.enPassant, move.enPassant.pos % 8, ~~(move.enPassant.pos / 8))
+            if (board.pos[move.enPassant.pos].col == 1) {
+                dragElement(document.getElementById(move.attack.pos))
+            }
+        }, 100)
     }
     if (move.castle != null) {
         document.getElementById(move.castle[1]).id = move.castle[0]

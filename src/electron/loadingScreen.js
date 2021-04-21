@@ -40,6 +40,7 @@ document.onreadystatechange = async function () {
         if (updateAvailabe == false) {
             ipcRenderer.send("start_app")
         } else {
+            document.getElementById("bar").style.opacity = 1
             uaup.Update(updateOptions)
         }
     }

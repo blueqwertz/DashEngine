@@ -29,9 +29,7 @@ document.onreadystatechange = async function () {
         const isPackaged = require("electron-is-packaged").isPackaged
 
         if (!isPackaged) {
-            setTimeout(() => {
-                ipcRenderer.send("start_app")
-            }, 500)
+            ipcRenderer.send("start_app")
             return
         }
 
@@ -40,7 +38,6 @@ document.onreadystatechange = async function () {
         if (updateAvailabe == false) {
             ipcRenderer.send("start_app")
         } else {
-            document.getElementById("bar").style.opacity = 1
             uaup.Update(updateOptions)
         }
     }

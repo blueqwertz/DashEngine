@@ -1,1 +1,1 @@
-{ "searchtime": 2600, "timer": 600, "usebook": true, "alpha_beta": true, "darkmode": true, "ui": { "game_info": true, "settings_info": true } }
+{"searchtime":2600,"timer":600,"usebook":true,"alpha_beta":true,"darkmode":true,"ui":{"game_info":true,"settings_info":false}}

@@ -223,10 +223,6 @@ hr {
     transition: transform 0.15s;
 }
 
-.board.back .piece {
-    transition: transform 0.1s;
-}
-
 @keyframes fade-in {
     from {
         opacity: 0;
@@ -324,15 +320,15 @@ hr {
     /* background-color: #d16464d7; */
 }
 
-.content .point.attack {
+/* .content .point.attack {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     background-color: transparent;
     border-radius: 0px;
-    /* box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, 0.8) inset; */
+    box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, 0.8) inset;
     transition: border 0.3s;
-}
+} */
 
 @keyframes bounce {
     50% {
@@ -340,14 +336,14 @@ hr {
         height: 35%;
     }
 }
-/* 
+
 .point.attack {
-    width: 75%;
-    height: 75%;
+    width: 90%;
+    height: 90%;
     background-color: transparent;
     border-radius: 50%;
-    border: 10px solid rgba(0,0,0,0.2);
-} */
+    box-shadow: 0px 0px 0px 7px rgba(0, 0, 0, 0.3) inset;
+}
 
 .remove {
     opacity: 0;
@@ -874,6 +870,7 @@ hr {
 
 .github-link {
     width: 28px;
+    height: 28px;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -1045,7 +1042,7 @@ hr {
     padding: 4px 0px;
     border-radius: 4px;
     min-height: 66px;
-    max-height: 239px;
+    max-height: 200px;
     overflow-y: scroll;
     transition: all linear 0.5s;
 }
@@ -1138,7 +1135,6 @@ hr {
     top: 50%;
     transform: translateY(-50%);
     background-color: white;
-    transition: 0.2s;
     transition: transform 0.3s;
 }
 
@@ -1290,4 +1286,39 @@ input:checked + .slider:before {
     border: 2px solid #c5c5c5;
     color: white;
     background-color: #c5c5c5;
+}
+
+.tooltip {
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    opacity: 0;
+    background-color: rgb(17, 17, 17);
+    padding: 5px 10px;
+    color: #c5c6c8;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 105%;
+    white-space: nowrap;
+    transition: all 0.1s 0s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 100%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent rgb(17, 17, 17) transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+    opacity: 1;
+    transform: translateY(-50%);
 }

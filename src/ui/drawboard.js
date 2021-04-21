@@ -129,7 +129,9 @@ function setSettings() {
 let searchDepth = 6
 
 var moveSound = new Audio("./sounds/move.mp3")
+moveSound.volume = 0.5
 let captureSound = new Audio("./sounds/capture.mp3")
+captureSound.volume = 0.5
 
 function setupBoard() {
     divoverlay.innerHTML = ""
@@ -341,6 +343,7 @@ function newGame() {
     board = new Board()
     board.setup()
     setupBoard()
+    isBack = true
     clearInterval(timer)
     timer = null
     UpdateButtons()
@@ -635,15 +638,25 @@ function UpdateButtons(movesMade, curMove) {
     }
 }
 
+function addDrag() {
+    for (let el of divboard.children) {
+        if (el.classList.toString().includes("w")) {
+            dragElement(el)
+        }
+    }
+}
+
 function backToNormal(numMoves = tempMovesMade - movesMade) {
     numMoves = Math.min(numMoves, tempMovesMade - movesMade)
-    console.log(numMoves)
+    document.getElementById("board").classList.add("back")
     for (let i = 0; i < numMoves; i++) {
         curmoves = [movesBack.pop()]
         makedisplaymove(0, true)
     }
+    document.getElementById("board").classList.remove("back")
     if (movesMade == tempMovesMade) {
         isBack = true
+        addDrag()
     } else {
         isBack = false
     }
@@ -717,8 +730,6 @@ function unmakedisplaymove() {
         }
     }
     if (move.castle != null) {
-        let x = move.castle[0] % 8
-        let y = Math.floor(move.castle[0] / 8)
         document.getElementById(move.castle[1]).id = move.castle[0]
     }
 

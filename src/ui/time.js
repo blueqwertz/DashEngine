@@ -32,7 +32,9 @@ function animateValue(start = 0, end = 100, duration = 300, steps = 100) {
     var timer = setInterval(function () {
         changeTime(current, 0)
         changeTime(current, 1)
-        if (current == end) {
+        if (end > start ? current >= end : current <= end) {
+            changeTime(end, 0)
+            changeTime(end, 1)
             clearInterval(timer)
         }
         current += increment

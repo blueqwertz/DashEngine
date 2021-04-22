@@ -56,6 +56,7 @@ body.light {
 *,
 *::before {
     user-select: none;
+    font-family: "Rubik";
     transition: background-color var(--transition-time), color var(--transition-time), border-color var(--transition-time), fill var(--transition-time);
 }
 
@@ -915,7 +916,7 @@ hr {
     height: 20px;
     position: absolute;
     top: 50%;
-    transform: translate(5px, -50%);
+    transform: translate(0, -50%);
     right: 0px;
     background-color: var(--moves-cont-bg);
     outline: none;
@@ -930,8 +931,31 @@ hr {
     transition: border 0.2s;
 }
 
+.stats-cont select {
+    width: 67px;
+    height: 26px;
+    outline: none;
+    border-radius: 4px;
+    border: none;
+    padding-left: 4px;
+    color: var(--font-color);
+    background-color: var(--moves-cont-bg);
+    font-size: 15px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.stats-cont select option {
+    color: var(--font-color);
+    background-color: var(--moves-cont-bg);
+    transition: background-color 0.2s;
+    margin: 2px 4px;
+    border-radius: 3px;
+}
+
 .container.inactive,
-.container.inactive input {
+.container.inactive select {
     color: var(--font-inactive) !important;
     pointer-events: none;
 }
@@ -1120,8 +1144,8 @@ hr {
     right: 0;
     bottom: 0;
     background-color: var(--moves-cont-bg);
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
+    -webkit-transition: 0.2s;
+    transition: 0.2s;
     border: none;
     transform: translateX(3px);
 }
@@ -1135,7 +1159,7 @@ hr {
     top: 50%;
     transform: translateY(-50%);
     background-color: white;
-    transition: transform 0.3s;
+    transition: transform 0.2s;
 }
 
 input:checked + .slider {

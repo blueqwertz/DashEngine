@@ -44,9 +44,23 @@ function addSetting(name, value) {
     }
     if (typeof value == "number") {
         settingsDiv.innerHTML += `<div class="container">
-                                    <span>${getBetterName(name)}</span><input type="number" id="${name}" value="${value}" max="100000" oninput="settings['${name}'] = parseFloat(this.value) || 0;
-                                    document.getElementById('allSettingsString').innerHTML = JSON.stringify(settings)">
+                                    <span>${getBetterName(name)}</span><input type="number" id="${name}" value="${value}" max="100000" oninput="settings['${name}'] = parseFloat(this.value) || 0;document.getElementById('allSettingsString').innerHTML = JSON.stringify(settings)">
                                 </div>`
+    }
+    if (Array.isArray(value)) {
+        settingsDiv.innerHTML += `<div class="container">
+                                    <span>Game Time</span>
+                                    <select name="${name}" id="${name}">
+                                        
+                                    </select>
+                                </div>`
+        for (let val of value[0]) {
+            document.getElementById(name).innerHTML += `<option value="${val}">${formatTime(val)}</option>`
+        }
+        setTimeout(() => {
+            document.getElementById(name).selectedIndex = value[1]
+        }, 100)
+        console.log(value[1])
     }
 }
 
@@ -101,18 +115,18 @@ function setSettings() {
         body.classList.add("light")
     }
 
-    timeall = parseFloat(document.getElementById("timer").value) || 0
+    timeall = settings["timer"][0][settings["timer"][1]]
     changeTime(timeall, 0)
     changeTime(timeall, 1)
     timewhite = timeall
     timeblack = timeall
 
     document.getElementById("timer").oninput = () => {
-        animateValue(timeall, parseFloat(document.getElementById("timer").value) || 0, 400)
-        timeall = parseFloat(document.getElementById("timer").value) || 0
+        animateValue(timeall, parseFloat(document.getElementById("timer").value), 400)
+        timeall = parseFloat(document.getElementById("timer").value)
         timewhite = timeall
         timeblack = timeall
-        settings["timer"] = parseFloat(document.getElementById("timer").value) || 0
+        settings["timer"][1] = settings["timer"][0].indexOf(parseFloat(document.getElementById("timer").value))
         document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
     }
 

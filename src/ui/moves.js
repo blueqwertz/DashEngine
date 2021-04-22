@@ -11,6 +11,7 @@ async function makedisplaymove(ind, show = false) {
     if (timer == null) {
         lasttimestart = new Date()
         document.getElementById("timer").parentElement.classList.add("inactive")
+        document.getElementById("timer").blur()
         timer = setInterval(function () {
             updateTime()
         }, 100)

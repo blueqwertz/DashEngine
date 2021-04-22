@@ -11,3 +11,4 @@ Features:
 -   [x] View last positions
 -   [ ] Transposition Table
 -   [ ] Iterative Deepening
+-   [ ] AI vs AI

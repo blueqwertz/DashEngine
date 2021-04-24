@@ -12,18 +12,22 @@ moveSound.volume = 0.5
 let captureSound = new Audio("./sounds/capture.mp3")
 captureSound.volume = 0.5
 
+for (let i = 0; i < 64; i++) {
+    let x = 7 - (i % 8)
+    let y = Math.floor(i / 8)
+    if ((x + y) % 2 != 0) {
+        document.getElementById("boardbg").innerHTML += `<div class="file light" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
+    } else {
+        document.getElementById("boardbg").innerHTML += `<div class="file dark" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
+    }
+}
+
 function setupBoard() {
     divoverlay.innerHTML = ""
     divboard.innerHTML = ""
-    document.getElementById("boardbg").innerHTML = ""
     for (let i = 63; i > -1; i--) {
         x = 7 - (i % 8)
         y = Math.floor(i / 8)
-        if ((x + y) % 2 != 0) {
-            document.getElementById("boardbg").innerHTML += `<div class="file light" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
-        } else {
-            document.getElementById("boardbg").innerHTML += `<div class="file dark" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
-        }
         if (board.pos[x + y * 8] != null) {
             addPiece(board.pos[x + y * 8], x, y)
         }

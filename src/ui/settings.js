@@ -60,7 +60,6 @@ function addSetting(name, value) {
         setTimeout(() => {
             document.getElementById(name).selectedIndex = value[1]
         }, 100)
-        console.log(value[1])
     }
 }
 

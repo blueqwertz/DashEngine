@@ -14,3 +14,4 @@ Features:
 -   [ ] Transposition Table
 -   [ ] Iterative Deepening
 -   [ ] AI vs AI
+-   [ ] Multi-Thread (WebWorkers)

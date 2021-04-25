@@ -27,7 +27,6 @@ function animateValue(start = 0, end = 100, duration = 300, steps = 100) {
     var current = start
     steps = Math.max(1, steps)
     var increment = (end - start) / steps
-    console.log(increment)
     var stepTime = Math.abs(Math.floor(duration / (range / increment)))
     var timer = setInterval(function () {
         changeTime(current, 0)

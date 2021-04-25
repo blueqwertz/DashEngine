@@ -3,7 +3,6 @@ let divoverlay = document.getElementById("points")
 let lastMovesDiv = document.getElementById("lastMoves")
 
 var settings
-var pieceArr = new Array()
 
 let searchDepth = 6
 
@@ -12,17 +11,38 @@ moveSound.volume = 0.5
 let captureSound = new Audio("./sounds/capture.mp3")
 captureSound.volume = 0.5
 
-for (let i = 0; i < 64; i++) {
-    let x = 7 - (i % 8)
-    let y = Math.floor(i / 8)
-    if ((x + y) % 2 != 0) {
-        document.getElementById("boardbg").innerHTML += `<div class="file light" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
-    } else {
-        document.getElementById("boardbg").innerHTML += `<div class="file dark" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
-    }
-}
+var pieceStart = new Array(64)
 
 function setupBoard() {
+    document.getElementById("boardbg").innerHTML = ""
+    document.getElementById("boardbg").innerHTML += `<svg viewBox="0 0 100 100" class="coordinates">
+                    <text x="0.75" y="3.5" font-size="2.3" class="coordinate-light">8</text>
+                    <text x="0.75" y="15.75" font-size="2.3" class="coordinate-dark">7</text>
+                    <text x="0.75" y="28.25" font-size="2.3" class="coordinate-light">6</text>
+                    <text x="0.75" y="40.75" font-size="2.3" class="coordinate-dark">5</text>
+                    <text x="0.75" y="53.25" font-size="2.3" class="coordinate-light">4</text>
+                    <text x="0.75" y="65.75" font-size="2.3" class="coordinate-dark">3</text>
+                    <text x="0.75" y="78.25" font-size="2.3" class="coordinate-light">2</text>
+                    <text x="0.75" y="90.75" font-size="2.3" class="coordinate-dark">1</text>
+                    <text x="10" y="99" font-size="2.3" class="coordinate-dark">a</text>
+                    <text x="22.5" y="99" font-size="2.3" class="coordinate-light">b</text>
+                    <text x="35" y="99" font-size="2.3" class="coordinate-dark">c</text>
+                    <text x="47.5" y="99" font-size="2.3" class="coordinate-light">d</text>
+                    <text x="60" y="99" font-size="2.3" class="coordinate-dark">e</text>
+                    <text x="72.5" y="99" font-size="2.3" class="coordinate-light">f</text>
+                    <text x="85" y="99" font-size="2.3" class="coordinate-dark">g</text>
+                    <text x="97.5" y="99" font-size="2.3" class="coordinate-light">h</text>
+                </svg>`
+    for (let i = 0; i < 64; i++) {
+        let x = 7 - (i % 8)
+        let y = Math.floor(i / 8)
+        if ((x + y) % 2 != 0) {
+            document.getElementById("boardbg").innerHTML += `<div class="file light" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
+        } else {
+            document.getElementById("boardbg").innerHTML += `<div class="file dark" style="grid-collumn:${x}; grid-row:${7 - y}"></div>`
+        }
+    }
+
     divoverlay.innerHTML = ""
     divboard.innerHTML = ""
     for (let i = 63; i > -1; i--) {
@@ -30,13 +50,15 @@ function setupBoard() {
         y = Math.floor(i / 8)
         if (board.pos[x + y * 8] != null) {
             addPiece(board.pos[x + y * 8], x, y)
+            pieceStart[x + y * 8] = x + y * 8
+            if (board.pos[x + y * 8].col == 0) {
+                document.getElementById(x + y * 8).classList.add("dark-piece")
+            }
         }
     }
     for (let el of divboard.children) {
         if (el.classList.toString().includes("w")) {
             dragElement(el)
-        } else {
-            el.classList.add("dark-piece")
         }
     }
 }
@@ -46,7 +68,6 @@ function addPiece(piece, x, y) {
     let piececode = getLookup(piece.type, piece.col).toLowerCase()
     let code = colcode + piececode
     divboard.innerHTML += `<div class="piece ${code}" id="${x + y * 8}"></div>`
-    pieceArr.push(document.getElementById(x + y * 8))
 }
 
 let curmoves = []

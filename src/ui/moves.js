@@ -19,6 +19,9 @@ async function makedisplaymove(ind, show = false) {
     removeSel()
     let move = curmoves[ind]
 
+    pieceStart[move.endSq] = pieceStart[move.startSq]
+    pieceStart[move.endSq] = null
+
     if (move == null) {
         console.warn("null move")
         return
@@ -99,6 +102,7 @@ async function makedisplaymove(ind, show = false) {
 
     if (!show) {
         if (board.col == 0) {
+            updateTime()
             setTimeout(function () {
                 document.getElementById("searching").classList.add("active")
                 if (!gameOver) {
@@ -107,6 +111,7 @@ async function makedisplaymove(ind, show = false) {
                         bestMove.then((move) => {
                             if (move != null) {
                                 curmoves = [move]
+                                updateTime()
                                 makedisplaymove(0)
                             }
                         })
@@ -115,6 +120,7 @@ async function makedisplaymove(ind, show = false) {
                         bestMove.then((move) => {
                             if (move != null) {
                                 curmoves = [move]
+                                updateTime()
                                 makedisplaymove(0)
                             }
                         })
@@ -199,12 +205,12 @@ function goBack(numMoves = movesMade) {
     document.getElementById("board").classList.add("back")
     numMoves = Math.min(numMoves, movesMade)
     if (numMoves > 0) {
-        unmakedisplaymove()
+        unmakeDisplayMove()
     }
     let i = 1
     let make = setInterval(() => {
         if (i < numMoves) {
-            unmakedisplaymove()
+            unmakeDisplayMove()
         } else {
             clearInterval(make)
         }
@@ -213,7 +219,7 @@ function goBack(numMoves = movesMade) {
     document.getElementById("board").classList.remove("back")
 }
 
-function unmakedisplaymove() {
+function unmakeDisplayMove() {
     if (board.movesHistory.length < 1) {
         return false
     }
@@ -224,6 +230,9 @@ function unmakedisplaymove() {
 
     movesBack.push(board.movesHistory[board.movesHistory.length - 1])
     let move = board.movesHistory.pop()
+
+    pieceStart[move.startSq] = pieceStart[move.endSq]
+    pieceStart[move.startSq] = null
 
     if (move.attack == null) {
         moveSound.play()

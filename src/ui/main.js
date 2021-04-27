@@ -23,8 +23,7 @@ captureSound.volume = 0.5
 var pieceStart = new Array(64)
 
 function setupBoard() {
-    document.getElementById("boardbg").innerHTML = ""
-    document.getElementById("boardbg").innerHTML += `<svg viewBox="0 0 100 100" class="coordinates">
+    document.getElementById("boardbg").innerHTML = `<svg viewBox="0 0 100 100" class="coordinates">
                     <text x="0.75" y="3.5" font-size="2.2" class="coordinate-light">8</text>
                     <text x="0.75" y="15.75" font-size="2.2" class="coordinate-dark">7</text>
                     <text x="0.75" y="28.25" font-size="2.2" class="coordinate-light">6</text>

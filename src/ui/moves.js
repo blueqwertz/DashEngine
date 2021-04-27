@@ -126,7 +126,7 @@ async function makedisplaymove(ind, show = false) {
                         })
                     }
                 }
-            }, 200)
+            }, 0)
         }
     }
 }

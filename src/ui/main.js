@@ -2,6 +2,15 @@ let divboard = document.getElementById("board")
 let divoverlay = document.getElementById("points")
 let lastMovesDiv = document.getElementById("lastMoves")
 
+var worker = new Worker("worker/thread.js")
+
+worker.addEventListener(
+    "message",
+    function (e) {
+        console.log("Worker said: ", e.data)
+    },
+    false
+)
 var settings
 
 let searchDepth = 6

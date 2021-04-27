@@ -21,9 +21,6 @@ function dragElement(elmnt) {
             return
         }
         drag(elmnt.id, elmnt)
-        if (elmnt.classList.toString().split(" ")[1][0] == "w" && board.col == 0) {
-            return
-        }
         if (elmnt.classList.toString().split(" ")[1][0] == "b" && board.col == 1) {
             return
         }

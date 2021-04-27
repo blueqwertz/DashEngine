@@ -9,7 +9,6 @@ worker.addEventListener(
     function (e) {
         if (e.data["move"] != undefined) {
             curmoves = [e.data.move]
-            console.log(e.data)
             if (e.data != null) {
                 makedisplaymove(0)
             }

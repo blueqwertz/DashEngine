@@ -98,7 +98,7 @@ function updateTime() {
         if (checkDraw()) {
             scoreDash += 1 / 2
             scoreYou += 1 / 2
-            document.getElementById("win-lostt-cont").classList.add("show")
+            document.getElementById("win-loss-cont").classList.add("show")
             document.getElementById("win-draw").innerHTML = "Draw"
             document.getElementById("score").innerHTML = `${scoreYou} - ${scoreDash}`
             gameOver = true
@@ -141,5 +141,6 @@ function updateTime() {
         clearInterval(timer)
         document.getElementById("timer").parentElement.classList.remove("inactive")
         timer = null
+        gameOver = true
     }
 }

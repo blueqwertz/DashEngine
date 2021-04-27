@@ -20,6 +20,7 @@ function dragElement(elmnt) {
         if (e.button != 0) {
             return
         }
+        drag(elmnt.id, elmnt)
         if (elmnt.classList.toString().split(" ")[1][0] == "w" && board.col == 0) {
             return
         }
@@ -28,7 +29,6 @@ function dragElement(elmnt) {
         }
         elmnt.classList.add("noTrans")
         elmnt.classList.add("grab")
-        drag(elmnt.id, elmnt)
         e = e || window.event
         e.preventDefault()
         ;[startX, startY] = [e.clientX, e.clientY]

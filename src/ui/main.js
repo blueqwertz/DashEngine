@@ -7,7 +7,15 @@ var worker = new Worker("worker/thread.js")
 worker.addEventListener(
     "message",
     function (e) {
-        console.log("Worker said: ", e.data)
+        if (e.data["move"] != undefined) {
+            curmoves = [e.data.move]
+            console.log(e.data)
+            if (e.data != null) {
+                makedisplaymove(0)
+            }
+        } else {
+            console.log("Worker said:", e.data)
+        }
     },
     false
 )

@@ -103,30 +103,25 @@ async function makedisplaymove(ind, show = false) {
     if (!show) {
         if (board.col == 0) {
             updateTime()
-            setTimeout(function () {
-                document.getElementById("searching").classList.add("active")
-                if (!gameOver) {
-                    if (board.movesMade < 5 && settings["usebook"]) {
-                        let bestMove = searchMoves(board.moves)
-                        bestMove.then((move) => {
-                            if (move != null) {
+            document.getElementById("searching").classList.add("active")
+            if (!gameOver) {
+                if (board.movesMade < 5 && settings["usebook"]) {
+                    let bestMove = searchMoves(board.moves)
+                    bestMove.then((move) => {
+                        if (move != null) {
+                            setTimeout(function () {
                                 curmoves = [move]
                                 updateTime()
                                 makedisplaymove(0)
-                            }
-                        })
-                    } else {
-                        let bestMove = Deepening(settings["searchtime"])
-                        bestMove.then((move) => {
-                            if (move != null) {
-                                curmoves = [move]
-                                updateTime()
-                                makedisplaymove(0)
-                            }
-                        })
-                    }
+                            }, 150)
+                        } else {
+                            return
+                        }
+                    })
+                } else {
+                    worker.postMessage({ settings: settings, board: board })
                 }
-            }, 0)
+            }
         }
     }
 }

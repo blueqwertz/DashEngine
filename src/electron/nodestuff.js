@@ -1,4 +1,5 @@
 const remote = require("electron").remote
+const path = require("path")
 const win = remote.getCurrentWindow()
 document.onreadystatechange = (event) => {
     if (document.readyState == "complete") {
@@ -12,7 +13,7 @@ async function storeSettings() {
     return new Promise((resolve) => {
         let data = document.getElementById("allSettingsString").innerText
         if (data.length > 0) {
-            fs.writeFile("src/settings.json", data, function (err) {
+            fs.writeFile(path.join(__dirname, "../settings.json"), data, function (err) {
                 if (err) return console.log(err)
                 resolve(1)
             })

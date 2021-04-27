@@ -11,7 +11,7 @@ Features:
 -   [x] Electron Desktop App
 -   [x] Stats - Settings
 -   [x] View last positions
+-   [x] Multi-Thread (WebWorkers)
 -   [ ] Transposition Table
 -   [ ] Iterative Deepening
 -   [ ] AI vs AI
--   [ ] Multi-Thread (WebWorkers)

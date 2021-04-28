@@ -136,6 +136,7 @@ function updateTime() {
             gameOver = true
         }
     } else {
+        isBack = false
         document.getElementById("time-black").classList.remove("low")
         document.getElementById("time-white").classList.remove("low")
         clearInterval(timer)

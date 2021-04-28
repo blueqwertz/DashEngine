@@ -22,6 +22,11 @@ async function makedisplaymove(ind, show = false) {
     pieceStart[move.endSq] = pieceStart[move.startSq]
     pieceStart[move.endSq] = null
 
+    if (board.pos[move.startSq].col != board.col) {
+        preMove(move)
+        return
+    }
+
     if (move == null) {
         console.warn("null move")
         return
@@ -58,11 +63,18 @@ async function makedisplaymove(ind, show = false) {
         if (movesMade % 2 == 0) {
             document.getElementById("moves").innerHTML += `<div class="row" id="m${movesMade / 2}"></div>`
         }
-        document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move'>" + convertToPgn(move) + "</div>"
+        if (movesMade > 0) {
+            document.getElementById(`mr${movesMade - 1}`).classList.remove("current")
+        }
+        document.getElementById("m" + Math.floor(movesMade / 2)).innerHTML += "<div class='move current' id='mr" + movesMade + "'>" + convertToPgn(move) + "</div>"
+    } else {
+        if (movesMade > 0) {
+            document.getElementById(`mr${movesMade - 1}`).classList.remove("current")
+        }
+        document.getElementById(`mr${movesMade}`).classList.add("current")
     }
 
-    var objDiv = document.getElementById("moves")
-    objDiv.scrollTop = objDiv.scrollHeight
+    document.getElementById(`mr${movesMade}`).scrollIntoView()
 
     movesMade++
 
@@ -219,7 +231,13 @@ function unmakeDisplayMove() {
         return false
     }
 
+    document.getElementById(`mr${movesMade - 1}`).classList.remove("current")
+    if (movesMade > 1) {
+        document.getElementById(`mr${movesMade - 2}`).classList.add("current")
+    }
+
     movesMade--
+    document.getElementById(`mr${movesMade}`).scrollIntoView()
 
     lastMovesDiv.innerHTML = ""
 
@@ -270,4 +288,8 @@ function unmakeDisplayMove() {
     }
 
     UpdateButtons(tempMovesMade, movesMade)
+}
+
+function preMove(move) {
+    return
 }

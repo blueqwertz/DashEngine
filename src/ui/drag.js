@@ -88,6 +88,9 @@ function dragElement(elmnt) {
     }
 
     function lookMove(file, rank) {
+        if (board.col == 0) {
+            return
+        }
         let ind = file + rank * 8
         let found = false
         for (let i in curmoves) {
@@ -114,11 +117,14 @@ function drag(ind) {
     removeSel()
     divoverlay.innerHTML = ""
     let cur = board.pos[ind]
-    if (board.pos[ind].col == board.col) {
+    if (board.pos[ind].col == 1) {
         divoverlay.innerHTML += `<div class="selected" style="grid-column: ${(ind % 8) + 1}; grid-row: ${7 - Math.floor(ind / 8) + 1}"></div>`
     }
-    if (cur.col == board.col) {
+    if (cur.col == 1) {
+        let temp = board.col
+        board.col = 1
         curmoves = movegenerator.generateMoves(ind)
+        board.col = temp
         let promAdded = false
         for (let i = 0; i < curmoves.length; i++) {
             let move = curmoves[i]

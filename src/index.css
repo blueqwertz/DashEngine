@@ -10,6 +10,7 @@ body {
     --font-color: #ffffff;
     --font-inactive: #828282;
     --moves-cont-bg: #424242;
+    --moves-cont-bg2: rgb(87, 87, 87) 2;
     --skip-button-active: #acacac;
     --skip-button-inactive: #6d6d6d;
     --skip-button-hover: #fff;
@@ -24,7 +25,8 @@ body {
     --selector-bg: #f3e8dc;
     --selector-focus: #fff;
     --scoll-thumb: #222222;
-
+    --move-current: #b4b4b4;
+    --move-current-font: #000;
     --hr: #424242;
 
     --transition-time: 0.2s;
@@ -36,6 +38,7 @@ body.light {
     --font-color: #6d6d6d;
     --font-inactive: #aaaaaa;
     --moves-cont-bg: #c7c7c7;
+    --moves-cont-bg: #afafaf;
     --skip-button-active: #a6a6a6;
     --skip-button-inactive: #dad8d8;
     --skip-button-hover: #6d6d6d;
@@ -51,6 +54,8 @@ body.light {
     --selector-focus: #8e8e8e;
     --scoll-thumb: #b4b4b4;
     --hr: #d3d3d3;
+    --move-current: #626262;
+    --move-current-font: #fff;
 }
 
 *,
@@ -1081,23 +1086,41 @@ hr {
     max-height: 200px;
     overflow-y: scroll;
     transition: all linear 0.5s;
+    position: relative;
+    counter-reset: number;
 }
 
 .moves-cont .row {
     display: flex;
     justify-content: space-between;
-    margin: 0px 5px;
+    margin: 0px 5px 0px 30px;
     padding: 3px 0px;
+    color: var(--font-color);
+    position: relative;
+    counter-increment: number;
+}
+
+.moves-cont :nth-child(n):not(.move)::before {
+    position: absolute;
+    right: calc(100% + 6px);
+    top: 50%;
+    font-weight: lighter;
+    transform: translateY(-50%);
+    content: counter(number) ".";
     color: var(--font-color);
 }
 
 .moves-cont .row .move {
     margin: 2px 2px;
     padding: 2px 4px;
-    background-color: var(--element-bg);
+    /* background-color: var(--element-bg); */
     border-radius: 3px;
-    transition: background-color 0.3s;
+    transition: background-color 0.15s;
     user-select: none;
+}
+
+.moves-cont .row .current {
+    background-color: var(--element-bg);
 }
 
 .stats .return.show {

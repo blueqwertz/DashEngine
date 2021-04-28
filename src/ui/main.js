@@ -115,6 +115,7 @@ function newGame() {
     changeTime(timeall, 1)
     document.getElementById("timer").parentElement.classList.remove("inactive")
     movesMade = 0
+    tempMovesMade = 0
     lasttimestart = new Date()
     gameOver = false
     board = new Board()
@@ -125,14 +126,6 @@ function newGame() {
     timer = null
     UpdateButtons()
 }
-
-/* this.startSq = sq
-        this.endSq = eq
-        this.enPassant = enpa
-        this.attack = board.pos[this.endSq]
-        this.castle = castle
-        this.movedChanged = !board.pos[this.startSq].moved
-        this.promotionType = promotion*/
 
 var timer = null
 var movesMade = 0

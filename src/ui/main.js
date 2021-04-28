@@ -21,6 +21,7 @@ worker.addEventListener(
 var settings
 
 let searchDepth = 6
+var curDrag
 
 var moveSound = new Audio("./sounds/move.mp3")
 moveSound.volume = 0.5

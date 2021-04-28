@@ -91,7 +91,13 @@ async function makedisplaymove(ind, show = false) {
         board.moves.push(posToLetter(move.startSq) + posToLetter(move.endSq) + getLookup(move.promotionType, 0))
     }
 
-    divoverlay.innerHTML = ""
+    if (board.col == 1) {
+        divoverlay.innerHTML = ""
+    } else {
+        document.querySelectorAll(".selected").forEach((el) => {
+            el.outerHTML = ""
+        })
+    }
     if (board.pos[move.endSq] != null) {
         document.getElementById(move.endSq).outerHTML = ""
     }
@@ -104,6 +110,9 @@ async function makedisplaymove(ind, show = false) {
         document.getElementById(move.castle[0]).id = move.castle[1]
     }
     board.makeMove(move)
+    if (document.querySelectorAll(".point").length > 0) {
+        drag(curDrag)
+    }
     let x = move.endSq % 8
     let y = Math.floor(move.endSq / 8)
     lastMovesDiv.innerHTML += `<div class="content lastmoveend" style="transform: translate(${x * 100}%, ${(7 - y) * 100}%)"></div>`

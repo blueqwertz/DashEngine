@@ -114,6 +114,7 @@ function dragElement(elmnt) {
 }
 
 function drag(ind) {
+    curDrag = ind
     removeSel()
     divoverlay.innerHTML = ""
     let cur = board.pos[ind]

@@ -1362,10 +1362,10 @@ input:checked + .slider:before {
     position: absolute;
     z-index: 1;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) translateX(-4px);
     left: 105%;
     white-space: nowrap;
-    transition: all 0.1s 0s;
+    transition: all 0.2s 0s;
     font-size: 14px;
 }
 
@@ -1381,5 +1381,5 @@ input:checked + .slider:before {
 }
 .tooltip:hover .tooltiptext {
     opacity: 1;
-    transform: translateY(-50%);
+    transform: translateY(-50%) translateX(0px);
 }

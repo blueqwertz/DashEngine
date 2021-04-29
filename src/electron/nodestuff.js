@@ -75,7 +75,7 @@ function handleWindowControls() {
     }
 }
 
-const isPackaged = require("electron-is-packaged").isPackaged
+const isPackaged = require("electron-is-packaged").isPackaged ? false : false
 
 if (!isPackaged) {
     document.addEventListener("keydown", function (e) {

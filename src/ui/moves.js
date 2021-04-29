@@ -253,7 +253,7 @@ function unmakeDisplayMove() {
     movesBack.push(board.movesHistory[board.movesHistory.length - 1])
     let move = board.movesHistory.pop()
 
-    pieceStart[move.startSq] = pieceStart[move.endSq]
+    pieceStart[move.endSq] = move.startSq
     pieceStart[move.startSq] = null
 
     if (move.attack == null) {

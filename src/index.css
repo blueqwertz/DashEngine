@@ -39,9 +39,9 @@ body.light {
     --font-inactive: #aaaaaa;
     --moves-cont-bg: #c7c7c7;
     --moves-cont-bg: #afafaf;
-    --skip-button-active: #a6a6a6;
-    --skip-button-inactive: #dad8d8;
-    --skip-button-hover: #6d6d6d;
+    --skip-button-inactive: #a6a6a6;
+    --skip-button-active: #dad8d8;
+    --skip-button-hover: #808080;
     --switch-button: #6f85d2;
     --titlebar: #9d9d9d;
     --button-hover: rgba(255, 255, 255, 0.1);

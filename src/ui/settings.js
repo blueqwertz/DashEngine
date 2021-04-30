@@ -96,22 +96,24 @@ function setSettings() {
         if (document.getElementById("darkmode").checked) {
             document.body.classList.remove("light")
             document.getElementById("dark_warn").classList.remove("active")
+            console.log("light")
+            settings["darkmode"] = true
+            document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
         } else {
             document.getElementById("dark_warn").classList.add("active")
             await waitForUserInput().then((data) => {
                 if (data == 1) {
                     document.body.classList.add("light")
                     document.getElementById("dark_warn").classList.remove("active")
+                    settings["darkmode"] = false
+                    document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
+                    console.log("light 2")
                 } else {
                     document.getElementById("dark_warn").classList.remove("active")
                     document.getElementById("darkmode").checked = true
                 }
             })
         }
-    }
-
-    if (!settings["darkmode"]) {
-        body.classList.add("light")
     }
 
     timeall = settings["timer"][0][settings["timer"][1]]

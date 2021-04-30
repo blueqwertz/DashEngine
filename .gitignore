@@ -95,4 +95,5 @@ out/
 
 electron-builder.yml
 src/cssgen.py
+.VSCodeCounter/
 src/settings_backup.json

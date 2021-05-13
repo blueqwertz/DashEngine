@@ -2,7 +2,7 @@
 
 ...is a very simple Chess Engine made with JavaScript and ElectronJS.
 
-Inspiration: "Coding Adventure - Chess AI" on YT by Sebastian Lauge
+Inspiration: [Sebastian Lauge - Coding Adventure](https://www.youtube.com/watch?v=U4ogK0MIzqk)
 
 ## Features:
 

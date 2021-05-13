@@ -36,7 +36,7 @@ function handleWindowControls() {
         win.minimize()
     })
 
-    document.getElementById("version").innerHTML = remote.app.getVersion()
+    version.innerHTML = remote.app.getVersion()
 
     document.getElementById("max-button").addEventListener("click", (event) => {
         win.maximize()
@@ -75,7 +75,7 @@ function handleWindowControls() {
     }
 }
 
-const isPackaged = require("electron-is-packaged").isPackaged ? false : false
+const isPackaged = require("electron-is-packaged").isPackaged
 
 if (!isPackaged) {
     document.addEventListener("keydown", function (e) {

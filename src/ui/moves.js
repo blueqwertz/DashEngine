@@ -153,15 +153,31 @@ async function makedisplaymove(ind, show = false) {
         } else {
             if (preMoves.length > 0) {
                 let moves = movegenerator.generateMoves()
-                let curPreMove = preMoves.shift()
-                console.log(moves, curPreMove)
-                if (moves.includes(curPreMove)) {
-                    curmoves = [curPreMove]
+                let curMove = preMoves.shift()
+                if (moveInList(moves, curMove)) {
+                    curmoves = [curMove]
+                    document.getElementById("preMoves").children[0].outerHTML = ""
+                    document.getElementById(curMove.startSq).style.transition = "all 0s"
                     makedisplaymove(0)
+                    setTimeout(() => {
+                        document.getElementById(curMove.endSq).removeAttribute("style")
+                    }, 50)
+                } else {
+                    preMoves = []
+                    document.getElementById("preMoves").innerHTML = ""
                 }
             }
         }
     }
+}
+
+function moveInList(movelist, move) {
+    for (let entry of movelist) {
+        if (entry.startSq == move.startSq && entry.endSq == move.endSq && entry.promotionType == move.promotionType) {
+            return true
+        }
+    }
+    return false
 }
 
 var first = document.getElementById("back-front")
@@ -317,7 +333,12 @@ function unmakeDisplayMove() {
 }
 
 function preMove(move) {
+    try {
+        document.getElementById(`p${move.endSq}`).outerHTML = ""
+    } catch (err) {
+        throw err
+    }
+    document.getElementById("preMoves").innerHTML += `<div class="preMove" style="grid-column: ${(move.endSq % 8) + 1}; grid-row:${8 - Math.floor(move.endSq / 8)}"></div>`
     preMoves.push(move)
-    console.log(preMoves)
     return
 }

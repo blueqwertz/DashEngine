@@ -714,11 +714,18 @@ hr {
     border: 1px solid var(--font-green);
     border-radius: 6px;
     color: var(--font-green);
+    background: linear-gradient(to right, var(--font-green) 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
     position: absolute;
     left: 104px;
     transform: translateY(-2px);
     opacity: 0;
-    transition: opacity 0.3s;
+}
+
+.searching.active.animate {
+    background-position: left bottom;
+    color: var(--element-bg);
 }
 
 .user .searching.active {
@@ -867,7 +874,7 @@ hr {
     width: 25px;
     height: 100%;
     position: absolute;
-    background-color: #4b4b4b;
+    background-color: var(--element-bg);
     left: calc(100% + 30px);
     box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
     overflow: hidden;

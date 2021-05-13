@@ -12,12 +12,21 @@ worker.addEventListener(
             if (e.data != null) {
                 makedisplaymove(0)
             }
+        } else if (e.data["depth"] != undefined) {
+            displayGameInfo(e.data)
         } else {
             console.log("Worker said:", e.data)
         }
     },
     false
 )
+
+function displayGameInfo(data) {
+    document.getElementById("evaldisp").innerHTML = Math.round(((data["eval"] / 100) * 10) / 10).toFixed(1)
+    // document.getElementById("eval").style.height = 50 - data["eval"] / 50 + "%"
+    document.getElementById("depth").innerHTML = data["depth"]
+}
+
 var settings
 
 let searchDepth = 6

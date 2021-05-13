@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron")
+const {app, BrowserWindow, ipcMain} = require("electron")
 const path = require("path")
 const nativeImage = require("electron").nativeImage
 var image = nativeImage.createFromPath(__dirname + "/icon.ico")
@@ -15,6 +15,7 @@ const createWindow = () => {
         backgroundColor: "#363536",
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false,
             enableRemoteModule: true,
             nodeIntegrationInWorker: true,
             preload: `${__dirname}/electron/nodestuff.js`,
@@ -69,7 +70,7 @@ app.on("window-all-closed", () => {
 })
 
 ipcMain.on("version", (event) => {
-    event.sender.send("app_version", { version: app.getVersion() })
+    event.sender.send("app_version", {version: app.getVersion()})
 })
 
 app.on("ready", createLoadingScreen)

@@ -18,7 +18,7 @@ self.addEventListener(
         board.history = e.data.board.history
         var bestMove = Deepening(settings["searchtime"])
         bestMove.then((move) => {
-            self.postMessage({ move: move })
+            self.postMessage({move: move})
         })
     },
     false

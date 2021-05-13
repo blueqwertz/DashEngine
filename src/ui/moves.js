@@ -1,9 +1,8 @@
+let preMoves = []
+
 async function makedisplaymove(ind, show = false) {
     if (!isBack && !show) {
         return
-    }
-    if (board.col == 0) {
-        document.getElementById("searching").classList.remove("active")
     }
 
     lastMovesDiv.innerHTML = ""
@@ -25,6 +24,12 @@ async function makedisplaymove(ind, show = false) {
     if (board.pos[move.startSq].col != board.col) {
         preMove(move)
         return
+    }
+
+    if (board.col == 0) {
+        document.getElementById("searching").style = `transition: background-position 0ms linear 300ms, color 0ms 300ms, opacity 0.3s;`
+        document.getElementById("searching").classList.remove("animate")
+        document.getElementById("searching").classList.remove("active")
     }
 
     if (move == null) {
@@ -140,7 +145,19 @@ async function makedisplaymove(ind, show = false) {
                         }
                     })
                 } else {
-                    worker.postMessage({ settings: settings, board: board })
+                    document.getElementById("searching").classList.add("animate")
+                    document.getElementById("searching").style = `transition: background-position ${settings.searchtime}ms linear, color ${settings.searchtime}ms, opacity 0.3s;`
+                    worker.postMessage({settings: settings, board: board})
+                }
+            }
+        } else {
+            if (preMoves.length > 0) {
+                let moves = movegenerator.generateMoves()
+                let curPreMove = preMoves.shift()
+                console.log(moves, curPreMove)
+                if (moves.includes(curPreMove)) {
+                    curmoves = [curPreMove]
+                    makedisplaymove(0)
                 }
             }
         }
@@ -300,5 +317,7 @@ function unmakeDisplayMove() {
 }
 
 function preMove(move) {
+    preMoves.push(move)
+    console.log(preMoves)
     return
 }

@@ -11,7 +11,7 @@ const fs = require("fs")
 
 async function storeSettings() {
     return new Promise((resolve) => {
-        let data = document.getElementById("allSettingsString").innerText
+        let data = JSON.stringify(JSON.parse(document.getElementById("allSettingsString").innerText), null, 4)
         if (data.length > 0) {
             fs.writeFile(path.join(__dirname, "../settings.json"), data, function (err) {
                 if (err) return console.log(err)
@@ -49,7 +49,7 @@ function handleWindowControls() {
         })
     })
 
-    var config = { attributes: true, childList: true, characterData: true }
+    var config = {attributes: true, childList: true, characterData: true}
     observer.observe(target, config)
 
     document.getElementById("restore-button").addEventListener("click", (event) => {

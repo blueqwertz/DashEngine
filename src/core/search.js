@@ -15,7 +15,7 @@ async function Deepening(time, view = false) {
             bestMove = curBestMove
         }
         bestScore = Math.max(bestScore, curScore)
-        // await updateEvalDepthDisp(curScore, tempDepth)
+        await updateEvalDepthDisp(curScore, tempDepth)
         if (view) {
             console.log(`${tempDepth} ply: ${totalNodes}, time left: ${time - (Date.now() - start)}`)
         }
@@ -28,9 +28,10 @@ async function Deepening(time, view = false) {
 
 function updateEvalDepthDisp(eval, depth) {
     return new Promise((resolve) => {
+        self.postMessage({"eval": Math.round((eval / 7) * -10) / 10, "depth": depth})
         // document.getElementById("evaldisp").innerHTML = Math.round((eval / 7) * -10) / 10
         // document.getElementById("eval").style.height = 50 - (eval / 7) + "%"
-        document.getElementById("depth").innerHTML = depth
+        // document.getElementById("depth").innerHTML = depth
         setTimeout(() => {
             resolve(1)
         }, 10)
@@ -91,7 +92,6 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
         } else {
             eval = minimax(depth - 1, board.col == 0, 0)
         }
-        // let eval = negamax(depth - 1, isBlack, negativeInfinity, infinity)
         board.unmakeMove(move)
         if (eval == null) {
             return [null, null]

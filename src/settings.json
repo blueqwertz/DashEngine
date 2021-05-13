@@ -16,7 +16,7 @@
     "darkmode": true,
     "filerank": true,
     "ui": {
-        "game_info": true,
+        "game_info": false,
         "settings_info": true
     }
 }

@@ -1,14 +1,22 @@
 const {app, BrowserWindow, ipcMain} = require("electron")
 const path = require("path")
+const windowStateKeeper = require("electron-window-state")
 const nativeImage = require("electron").nativeImage
 var image = nativeImage.createFromPath(__dirname + "/icon.ico")
 
 var mainWindow
 
 const createWindow = () => {
+    let mainWindowState = windowStateKeeper({
+        defaultWidth: 1000,
+        defaultHeight: 800,
+    })
+
     mainWindow = new BrowserWindow({
-        width: 0,
-        height: 0,
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
         icon: image,
         frame: false,
         show: false,
@@ -22,9 +30,9 @@ const createWindow = () => {
         },
     })
 
+    mainWindowState.manage(mainWindow)
     mainWindow.loadFile(path.join(__dirname, "index.html"))
     mainWindow.setMenu(null)
-    mainWindow.maximize()
 
     mainWindow.webContents.on("did-finish-load", () => {
         if (loadingScreen) {

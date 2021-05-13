@@ -1,4 +1,7 @@
-const { ipcRenderer } = require("electron")
+const {ipcRenderer} = require("electron")
+const path = require("path")
+var updaterPath = path.join(__dirname, "/updater.js")
+console.log(updaterPath)
 
 document.onreadystatechange = async function () {
     if (document.readyState === "complete") {
@@ -24,7 +27,7 @@ document.onreadystatechange = async function () {
             stageTitles: defaultStages, // {Default is defaultStages} [Optional] Sets the Status Title for Each Stage
         }
 
-        const uaup = require("uaup-js")
+        const Updater = require(updaterPath)
 
         const isPackaged = require("electron-is-packaged").isPackaged
 
@@ -33,12 +36,12 @@ document.onreadystatechange = async function () {
             return
         }
 
-        let updateAvailabe = await uaup.CheckForUpdates(updateOptions)
+        let updateAvailabe = await Updater.CheckForUpdates(updateOptions)
 
         if (updateAvailabe == false) {
             ipcRenderer.send("start_app")
         } else {
-            uaup.Update(updateOptions)
+            Updater.Update(updateOptions)
         }
     }
 }

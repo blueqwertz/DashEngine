@@ -26,7 +26,7 @@ const createWindow = () => {
             contextIsolation: false,
             enableRemoteModule: true,
             nodeIntegrationInWorker: true,
-            preload: `${__dirname}/electron/nodestuff.js`,
+            preload: `${__dirname}/electron/mainScreen.js`,
         },
     })
 
@@ -65,7 +65,6 @@ const createLoadingScreen = () => {
     loadingScreen.setResizable(false)
     loadingScreen.loadFile(path.join(__dirname, "loading.html"))
     loadingScreen.on("closed", () => (loadingScreen = null))
-
     loadingScreen.webContents.on("did-finish-load", () => {
         loadingScreen.show()
     })

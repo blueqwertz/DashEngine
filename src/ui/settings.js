@@ -23,6 +23,7 @@ var settingsNames = {
     darkmode: "Dark Mode",
     timer: "Game Time (s)",
     filerank: "Disp. File/Ranks",
+    premoves: "Enable Premoves",
 }
 
 function addSetting(name, value) {
@@ -136,6 +137,12 @@ function setSettings() {
         console.log(document.getElementById("filerank").checked)
         let opacity = document.getElementById("filerank").checked ? "1" : "0"
         document.getElementById("filerankdisp").style = `opacity: ${opacity}`
+    })
+
+    document.getElementById("premoves").addEventListener("input", () => {
+        if (!settings.premoves) {
+            removePreMoves()
+        }
     })
 
     setupBoard()

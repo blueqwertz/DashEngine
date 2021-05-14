@@ -1,3 +1,6 @@
+const { ElectronHttpExecutor } = require("electron-updater/out/electronHttpExecutor")
+
+//#region Deepening
 async function Deepening(time, view = false) {
     totalNodes = 0
     let bestMove = null
@@ -60,7 +63,9 @@ function IterativeDeepening(depth) {
     tt.clear()
     return bestMove
 }
+//#endregion
 
+//#region VARS
 var totalNodes = 0
 var cutOffs = 0
 var totalTranspositions
@@ -69,7 +74,9 @@ var [LOWERBOUND, EXACT, UPPERBOUND] = [-1, 0, 1]
 
 var infinity = 999999
 var negativeInfinity = -infinity
+//#endregion
 
+//#region Search
 function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
     if (depth == 0) {
         return undefined
@@ -87,11 +94,12 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
     for (let move of moves) {
         board.makeMove(move)
         let eval = null
-        if (settings.alpha_beta) {
-            eval = alpha_beta(depth - 1, board.col == 0, negativeInfinity, infinity, 0)
-        } else {
-            eval = minimax(depth - 1, board.col == 0, 0)
-        }
+        // if (settings.alpha_beta) {
+        //     eval = alpha_beta(depth - 1, board.col == 0, negativeInfinity, infinity, 0)
+        // } else {
+        //     eval = minimax(depth - 1, board.col == 0, 0)
+        // }
+        eval = negamax(depth - 1, negativeInfinity, infinity, false)
         board.unmakeMove(move)
         if (eval == null) {
             return [null, null]
@@ -110,7 +118,7 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
 
     tt.clear()
 
-    console.log((Date.now() - start).toString() + " ms, nodes:", totalNodes.toString())
+    console.log((Date.now() - start).toString() + " ms, nodes:", totalNodes.toString(), ", Cutoffs: ", cutOffs)
 
     return bestMove
 
@@ -259,8 +267,60 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
             return mineval
         }
     }
-}
 
+    function negamax(depth, alpha, beta, isBlack) {
+        let alphaOrig = alpha
+        let ttEntry
+        ttEntry = tt.lookup(board.hash)
+        if (ttEntry?.depth >= depth) {
+            if (ttEntry.flag == EXACT) {
+                cutOffs++
+                return ttEntry.value
+            }
+            else if (ttEntry.flag == LOWERBOUND) {
+                alpha = Math.max(alpha, ttEntry.value)
+            }
+            else if (ttEntry.flag == UPPERBOUND) {
+                beta = Math.min(beta, ttEntry.value)
+            }
+            if (alpha >= beta) {
+                cutOffs++
+                return ttEntry.value
+            }
+        }
+
+        if (depth == 0) {
+            return isBlack ? Evaluate() : -Evaluate()
+        }
+
+        let nodes = orderMoves(movegenerator.generateMoves())
+        let value = negativeInfinity
+        for (let move of nodes) {
+            board.makeMove(move)
+            value = Math.max(value, -negamax(depth - 1, -beta, -alpha, !isBlack))
+            board.unmakeMove(move)
+            alpha = Math.max(alpha, value)
+            if (alpha >= beta) {
+                break
+            }
+        }
+        ttEntry = {}
+        ttEntry.value = value
+        ttEntry.depth = depth
+        if (value <= alphaOrig) {
+            ttEntry.flag = UPPERBOUND
+        } else if (value >= beta) {
+            ttEntry.flag = LOWERBOUND
+        } else {
+            ttEntry.flag = EXACT
+        }
+        tt.store(board.hash, ttEntry.value, ttEntry.depth, ttEntry.flag)
+        return value
+    }
+}
+//#endregion
+
+//#region Eval
 function Evaluate() {
     totalNodes++
 
@@ -418,7 +478,9 @@ function getPieceScore(p) {
         return scores[p.type - 1]
     }
 }
+//#endregion
 
+//#region OldSearch
 function OldSearch(depth) {
     let totalNodes = 0
     let start = Date.now()
@@ -522,3 +584,4 @@ function OldSearch(depth) {
         }
     }
 }
+//#endregion

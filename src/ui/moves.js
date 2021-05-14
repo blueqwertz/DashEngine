@@ -333,6 +333,9 @@ function unmakeDisplayMove() {
 }
 
 function preMove(move) {
+    if (!settings.premoves) {
+        return false
+    }
     try {
         document.getElementById(`p${move.endSq}`).outerHTML = ""
     } catch (err) {

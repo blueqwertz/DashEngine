@@ -22,6 +22,7 @@ var settingsNames = {
     alpha_beta: "Alpha-Beta Pruning",
     darkmode: "Dark Mode",
     timer: "Game Time (s)",
+    filerank: "Disp. File/Ranks",
 }
 
 function addSetting(name, value) {
@@ -130,6 +131,8 @@ function setSettings() {
         settings["timer"][1] = settings["timer"][0].indexOf(parseFloat(document.getElementById("timer").value))
         document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
     }
+
+    document.getElementById("filerank").oninput = () => {}
 
     isBack = true
 }

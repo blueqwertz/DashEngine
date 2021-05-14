@@ -239,7 +239,7 @@ function backToNormal(numMoves = tempMovesMade - movesMade) {
     document.getElementById("board").classList.remove("back")
 }
 
-let isBack = false
+let isBack = true
 let movesBack = []
 let tempMovesMade
 
@@ -341,4 +341,15 @@ function preMove(move) {
     document.getElementById("preMoves").innerHTML += `<div class="preMove" style="grid-column: ${(move.endSq % 8) + 1}; grid-row:${8 - Math.floor(move.endSq / 8)}"></div>`
     preMoves.push(move)
     return
+}
+
+document.addEventListener("contextmenu", (event) => {
+    if (event.target.closest(".boards")) {
+        removePreMoves()
+    }
+})
+
+function removePreMoves() {
+    preMoves = []
+    document.getElementById("preMoves").innerHTML = ""
 }

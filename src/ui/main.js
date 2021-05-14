@@ -40,7 +40,7 @@ captureSound.volume = 0.5
 var pieceStart = new Array(64)
 
 function setupBoard() {
-    document.getElementById("boardbg").innerHTML = `<svg viewBox="0 0 100 100" class="coordinates">
+    document.getElementById("boardbg").innerHTML = `<svg viewBox="0 0 100 100" id="filerankdisp" style="opacity: ${settings.filerank ? "1" : "0"}" class="coordinates">
                     <text x="0.75" y="3.5" font-size="2.2" class="coordinate-light">8</text>
                     <text x="0.75" y="15.75" font-size="2.2" class="coordinate-dark">7</text>
                     <text x="0.75" y="28.25" font-size="2.2" class="coordinate-light">6</text>
@@ -115,6 +115,9 @@ function newGame() {
     document.getElementById("time-white").innerHTML = minutes + ":" + seconds
     document.getElementById("time-black").innerHTML = minutes + ":" + seconds
     document.getElementById("win-loss-cont").classList.remove("show")
+    document.getElementById("searching").style = `transition: background-position 0ms linear 300ms, color 0ms 300ms, opacity 0.3s;`
+    document.getElementById("searching").classList.remove("animate")
+    document.getElementById("searching").classList.remove("active")
     lastMovesDiv.innerHTML = ""
     document.getElementById("moves").innerHTML = ""
     document.getElementById("depth").innerHTML = "-"
@@ -145,8 +148,6 @@ function removeSel() {
         i.classList.remove("selected")
     }
 }
-
-setupBoard()
 
 function convertToPgn(move) {
     if (move.castle != null) {

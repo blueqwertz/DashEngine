@@ -132,7 +132,13 @@ function setSettings() {
         document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
     }
 
-    document.getElementById("filerank").oninput = () => {}
+    document.getElementById("filerank").addEventListener("input", () => {
+        console.log(document.getElementById("filerank").checked)
+        let opacity = document.getElementById("filerank").checked ? "1" : "0"
+        document.getElementById("filerankdisp").style = `opacity: ${opacity}`
+    })
+
+    setupBoard()
 
     isBack = true
 }

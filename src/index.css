@@ -275,6 +275,10 @@ hr {
     position: absolute;
 }
 
+.coordinates {
+    transition: opacity 300ms;
+}
+
 .coordinate-dark {
     fill: #f0d9b5;
 }
@@ -1110,7 +1114,7 @@ hr {
 .moves-cont .row {
     display: flex;
     justify-content: space-between;
-    margin: 0px 5px 0px 30px;
+    margin: 0px 5px 0px 35px;
     padding: 3px 0px;
     color: var(--font-color);
     position: relative;

@@ -9,9 +9,9 @@
             600,
             3600
         ],
-        2
+        3
     ],
-    "usebook": false,
+    "usebook": true,
     "alpha_beta": true,
     "darkmode": true,
     "filerank": true,

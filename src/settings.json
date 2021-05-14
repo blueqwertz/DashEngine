@@ -11,11 +11,11 @@
         ],
         2
     ],
-    "usebook": false,
+    "premoves": false,
+    "usebook": true,
     "alpha_beta": true,
     "darkmode": true,
     "filerank": true,
-    "premoves": true,
     "ui": {
         "game_info": true,
         "settings_info": true

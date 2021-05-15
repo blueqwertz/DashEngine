@@ -1,5 +1,3 @@
-const { ElectronHttpExecutor } = require("electron-updater/out/electronHttpExecutor")
-
 //#region Deepening
 async function Deepening(time, view = false) {
     totalNodes = 0

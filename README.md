@@ -13,7 +13,7 @@ Inspiration: [Sebastian Lauge - Coding Adventure](https://www.youtube.com/watch?
 -   [x] View last positions
 -   [x] Multi-Thread (WebWorkers)
 -   [x] Pre-Moves
--   [x] Transposition Table
+-   [ ] Transposition Table
 -   [ ] Iterative Deepening
 -   [ ] AI vs AI
 

@@ -32,9 +32,6 @@ async function Deepening(time, view = false) {
 function updateEvalDepthDisp(eval, depth) {
     return new Promise((resolve) => {
         self.postMessage({"eval": Math.round((eval / 7) * -10) / 10, "depth": depth})
-        // document.getElementById("evaldisp").innerHTML = Math.round((eval / 7) * -10) / 10
-        // document.getElementById("eval").style.height = 50 - (eval / 7) + "%"
-        // document.getElementById("depth").innerHTML = depth
         setTimeout(() => {
             resolve(1)
         }, 10)
@@ -53,7 +50,7 @@ function IterativeDeepening(depth) {
             bestMove = curBestMove
             bestScore = curScore
         }
-        console.log(`${tempDepth} ply: ${Date.now() - start} ms, nodes: ${totalNodes}`)
+        console.log(`${tempDepth} ply: ${Date.now() - start} ms, nodes: ${totalNodes}, cutoffs: ${cutOffsrs}`)
         iterativeNodes += totalNodes
         if (bestScore == infinity) {
             return bestMove
@@ -93,18 +90,15 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
     
     cutOffs = 0
 
-    let alpha = negativeInfinity
-    let beta = infinity
-
     for (let move of moves) {
         board.makeMove(move)
         let eval = null
-        // if (settings.alpha_beta) {
-        //     eval = alpha_beta(depth - 1, board.col == 0, alpha, beta, 0)
-        // } else {
-        //     eval = minimax(depth - 1, board.col == 0, 0)
-        // }
-        eval = -negamax(depth - 1, -beta, -alpha, -1)
+        if (settings.alpha_beta) {
+            eval = alpha_beta(depth - 1, board.col == 0, negativeInfinity, infinity, 0)
+        } else {
+            eval = minimax(depth - 1, board.col == 0, 0)
+        }
+        // eval = -negamax(depth - 1, -beta, -alpha, -1)
         board.unmakeMove(move)
         if (eval == null) {
             return [null, null]
@@ -112,7 +106,6 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
         if (eval > bestScore) {
             bestMove = move
         }
-        alpha = Math.max(alpha, eval)
         bestScore = Math.max(bestScore, eval)
     }
 
@@ -201,6 +194,22 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
     }
 
     function alpha_beta(depth, ismaximising, alpha, beta) {
+        let alphaOrig = alpha
+
+        ttEntry = tt.lookup(board.hash)
+        if (ttEntry?.depth > depth) {
+            if (ttEntry.flag == EXACT) {
+                cutOffs++
+                return ttEntry.value
+            } else if (ttEntry.flag == LOWERBOUND) {
+                alpha = Math.max(alpha, ttEntry.value)
+            } else if (ttEntry.flag == UPPERBOUND) {
+                beta = Math.min(beta, ttEntry.value)
+            } if (alpha >= beta) {
+                cutOffs++
+                return ttEntry.value
+            }
+        }
 
         if (depth == 0) {
             return Evaluate()
@@ -225,6 +234,9 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
                 let move = moves[i]
                 board.makeMove(move)
                 let eval = alpha_beta(depth - 1, false, alpha, beta)
+                if (eval == null) {
+                    return null
+                }
                 board.unmakeMove(move)
                 alpha = Math.max(alpha, eval)
                 if (beta <= alpha) {
@@ -232,6 +244,17 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
                 }
                 maxeval = Math.max(eval, maxeval)
             }
+            let ttEntry = {}
+            if (maxeval <= alphaOrig) {
+                ttEntry.flag = UPPERBOUND
+            } else if (maxeval >= beta) {
+                ttEntry.flag = LOWERBOUND
+            } else {
+                ttEntry.flag = EXACT
+            }
+            ttEntry.depth = depth
+            ttEntry.value = maxeval
+            tt.store(board.hash, ttEntry.value, ttEntry.depth, ttEntry.flag)
             return maxeval
         } else {
             if (moves.length == 0) {
@@ -246,6 +269,9 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
                 let move = moves[i]
                 board.makeMove(move)
                 let eval = alpha_beta(depth - 1, true, alpha, beta)
+                if (eval == null) {
+                    return null
+                }
                 board.unmakeMove(move)
                 beta = Math.min(beta, eval)
                 if (beta <= alpha) {
@@ -253,10 +279,21 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
                 }
                 mineval = Math.min(eval, mineval)
             }
+            let ttEntry = {}
+            if (mineval <= alphaOrig) {
+                ttEntry.flag = UPPERBOUND
+            } else if (mineval >= beta) {
+                ttEntry.flag = LOWERBOUND
+            } else {
+                ttEntry.flag = EXACT
+            }
+            ttEntry.depth = depth
+            ttEntry.value = mineval
+            tt.store(board.hash, ttEntry.value, ttEntry.depth, ttEntry.flag)
             return mineval
         }
     }
-
+    //#region negmax
     function negamax(depth, alpha, beta, color) {
         // let alphaOrig = alpha
         // let ttEntry
@@ -307,6 +344,7 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
         // }
         // tt.store(board.hash, ttEntry.value, ttEntry.depth, ttEntry.flag)
     }
+    //#endregion
 }
 //#endregion
 

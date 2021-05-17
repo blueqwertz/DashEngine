@@ -2,7 +2,9 @@ const {app, BrowserWindow, ipcMain} = require("electron")
 const path = require("path")
 const windowStateKeeper = require("electron-window-state")
 const nativeImage = require("electron").nativeImage
-var image = nativeImage.createFromPath(__dirname + "icon.png")
+var image = nativeImage.createFromPath(__dirname + "/icon.png")
+
+console.log(__dirname + "/icon.png")
 
 var mainWindow
 

@@ -27,7 +27,7 @@ async function makedisplaymove(ind, show = false) {
     }
 
     if (board.col == 0) {
-        document.getElementById("searching").style = `transition: background-position 0ms linear 300ms, color 0ms 300ms, opacity 0.3s;`
+        document.getElementById("searching").style = `all 0s`
         document.getElementById("searching").classList.remove("animate")
         document.getElementById("searching").classList.remove("active")
     }
@@ -150,22 +150,23 @@ async function makedisplaymove(ind, show = false) {
                     worker.postMessage({settings: settings, board: board})
                 }
             }
-        } else {
-            if (preMoves.length > 0) {
-                let moves = movegenerator.generateMoves()
-                let curMove = preMoves.shift()
-                if (moveInList(moves, curMove)) {
-                    curmoves = [curMove]
-                    document.getElementById("preMoves").children[0].outerHTML = ""
-                    document.getElementById(curMove.startSq).style.transition = "all 0s"
-                    makedisplaymove(0)
-                    setTimeout(() => {
-                        document.getElementById(curMove.endSq).removeAttribute("style")
-                    }, 50)
-                } else {
-                    preMoves = []
-                    document.getElementById("preMoves").innerHTML = ""
-                }
+        } else if (preMoves.length > 0) {
+            let moves = movegenerator.generateMoves()
+            let curMove = preMoves.shift()
+            if (moveInList(moves, curMove)) {
+                document.getElementById("searching").classList.remove("animate")
+                document.getElementById("searching").classList.remove("active")
+                document.getElementById("searching").style = `transition: all 0s; color: var(--font-green);`
+                curmoves = [curMove]
+                document.getElementById("preMoves").children[0].outerHTML = ""
+                document.getElementById(curMove.startSq).style.transition = "all 0s"
+                makedisplaymove(0)
+                setTimeout(() => {
+                    document.getElementById(curMove.endSq).removeAttribute("style")
+                }, 50)
+            } else {
+                preMoves = []
+                document.getElementById("preMoves").innerHTML = ""
             }
         }
     }

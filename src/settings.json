@@ -11,8 +11,8 @@
         ],
         2
     ],
-    "premoves": false,
-    "usebook": true,
+    "premoves": true,
+    "usebook": false,
     "alpha_beta": true,
     "darkmode": true,
     "filerank": true,

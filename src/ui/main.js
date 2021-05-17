@@ -118,6 +118,7 @@ function newGame() {
     document.getElementById("searching").style = `transition: background-position 0ms linear 300ms, color 0ms 300ms, opacity 0.3s;`
     document.getElementById("searching").classList.remove("animate")
     document.getElementById("searching").classList.remove("active")
+    document.getElementById("preMoves").innerHTML = ""
     lastMovesDiv.innerHTML = ""
     document.getElementById("moves").innerHTML = ""
     document.getElementById("depth").innerHTML = "-"

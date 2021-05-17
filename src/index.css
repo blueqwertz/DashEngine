@@ -1388,6 +1388,7 @@ input:checked + .slider:before {
     white-space: nowrap;
     transition: all 0.2s 0s;
     font-size: 14px;
+    pointer-events: none;
 }
 
 .tooltip .tooltiptext::after {

@@ -10,7 +10,7 @@ async function Deepening(time, view = false) {
         }
         let [curBestMove, curScore] = Search(tempDepth, true, time - (Date.now() - start) - 10)
         if (curBestMove == null) {
-            break
+            return new Promise(resolve => {resolve(bestMove)})
         }
         if (curScore > bestScore) {
             bestMove = curBestMove
@@ -89,18 +89,18 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
     cutOffs = 0
 
     for (let move of moves) {
-        board.makeMove(move)
         let eval = null
+        board.makeMove(move)
         if (settings.alpha_beta) {
             eval = alpha_beta(depth - 1, board.col == 0, negativeInfinity, infinity, 0)
         } else {
             eval = minimax(depth - 1, board.col == 0, 0)
         }
         // eval = -negamax(depth - 1, -beta, -alpha, -1)
-        board.unmakeMove(move)
         if (eval == null) {
             return [null, null]
         }
+        board.unmakeMove(move)
         if (eval > bestScore) {
             bestMove = move
         }

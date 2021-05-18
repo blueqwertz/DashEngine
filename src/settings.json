@@ -1,5 +1,5 @@
 {
-    "searchtime": 3000,
+    "searchtime": 2000,
     "timer": [
         [
             60,
@@ -9,7 +9,7 @@
             600,
             3600
         ],
-        2
+        4
     ],
     "premoves": true,
     "usebook": false,

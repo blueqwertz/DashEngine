@@ -145,8 +145,9 @@ async function makedisplaymove(ind, show = false) {
                         }
                     })
                 } else {
+                    blockButtons()
                     document.getElementById("searching").classList.add("animate")
-                    document.getElementById("searching").style = `transition: background-position ${settings.searchtime}ms linear, color ${settings.searchtime}ms, opacity 0.3s;`
+                    document.getElementById("searching").style = `transition: background-position ${settings.searchtime - 50}ms linear, color ${settings.searchtime - 50}ms, opacity 0.3s;`
                     worker.postMessage({settings: settings, board: board})
                 }
             }
@@ -201,6 +202,14 @@ function UpdateButtons(movesMade, curMove) {
         skip.classList.remove("active")
         last.classList.remove("active")
     }
+}
+
+function blockButtons() {
+    first.classList.remove("active")
+    back.classList.remove("active")
+
+    skip.classList.remove("active")
+    last.classList.remove("active")
 }
 
 function addDrag() {

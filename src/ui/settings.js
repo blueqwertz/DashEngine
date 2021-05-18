@@ -23,7 +23,7 @@ var settingsNames = {
     darkmode: "Dark Mode",
     timer: "Game Time (s)",
     filerank: "Disp. File/Ranks",
-    premoves: "Enable Premoves",
+    premoves: "Premoves",
 }
 
 function addSetting(name, value) {

@@ -145,7 +145,7 @@ async function makedisplaymove(ind, show = false) {
                         }
                     })
                 } else {
-                    blockButtons()
+                    // blockButtons()
                     document.getElementById("searching").classList.add("animate")
                     document.getElementById("searching").style = `transition: background-position ${settings.searchtime - 50}ms linear, color ${settings.searchtime - 50}ms, opacity 0.3s;`
                     worker.postMessage({settings: settings, board: board})

@@ -16,6 +16,7 @@ readTextFile("./settings.json", function (text) {
 })
 
 var settingsDiv = document.getElementById("settingsContainer")
+
 var settingsNames = {
     searchtime: "Search Time (ms)",
     usebook: "Opening Book",

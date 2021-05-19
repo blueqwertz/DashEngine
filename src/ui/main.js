@@ -8,6 +8,15 @@ worker.addEventListener(
     "message",
     function (e) {
         if (e.data["move"] != undefined) {
+            if (movesBack.length > 0) {
+                for (let move of movesBack) {
+                    board.makeMove(move)
+                    console.log(move)
+                }
+                movesBack = []
+                setupBoard()
+            }
+            console.log(e.data.move)
             curmoves = [e.data.move]
             if (e.data != null) {
                 makedisplaymove(0)

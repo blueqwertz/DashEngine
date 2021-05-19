@@ -37,7 +37,7 @@ async function searchMoves(movesPlayed) {
     if (posMoves.length == 0) {
         document.getElementById("searching").style = `transition: background-position ${settings.searchtime}ms linear, color ${settings.searchtime}ms, opacity 0.3s;`
         document.getElementById("searching").classList.add("animate")
-        blockButtons()
+        // blockButtons()
         worker.postMessage({settings: settings, board: board})
         return new Promise((resolve) => {
             resolve(null)

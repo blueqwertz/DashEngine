@@ -6,25 +6,25 @@ console.log(updaterPath)
 document.onreadystatechange = async function () {
     if (document.readyState === "complete") {
         const defaultStages = {
-            Checking: "Checking For Updates!", // When Checking For Updates.
-            Found: "Update Found!", // If an Update is Found.
-            NotFound: "No Update Found.", // If an Update is Not Found.
-            Downloading: "Downloading...", // When Downloading Update.
-            Unzipping: "Installing...", // When Unzipping the Archive into the Application Directory.
-            Cleaning: "Finalizing...", // When Removing Temp Directories and Files (ex: update archive and tmp directory).
-            Launch: "Launching...", // When Launching the Application.
+            Checking: "Checking For Updates!",
+            Found: "Update Found!",
+            NotFound: "No Update Found.",
+            Downloading: "Downloading...",
+            Unzipping: "Installing...",
+            Cleaning: "Finalizing...",
+            Launch: "Launching...",
         }
 
         const updateOptions = {
-            gitRepo: "DashEngine", // [Required] Your Repo Name
-            gitUsername: "blueqwertz", // [Required] Your GitHub Username.
+            gitRepo: "DashEngine",
+            gitUsername: "blueqwertz",
 
-            appName: "DashEngine", //[Required] The Name of the app archive and the app folder.
-            appExecutableName: "DashEngine.exe", //[Required] The Executable of the Application to be Run after updating.
+            appName: "DashEngine",
+            appExecutableName: "DashEngine.exe",
 
-            progressBar: document.getElementById("bar"), // {Default is null} [Optional] If Using Electron with a HTML Progressbar, use that element here, otherwise ignore
-            label: document.getElementById("message"), // {Default is null} [Optional] If Using Electron, this will be the area where we put status updates using InnerHTML
-            stageTitles: defaultStages, // {Default is defaultStages} [Optional] Sets the Status Title for Each Stage
+            progressBar: document.getElementById("bar"),
+            label: document.getElementById("message"),
+            stageTitles: defaultStages,
         }
 
         const Updater = require(updaterPath)
@@ -38,7 +38,7 @@ document.onreadystatechange = async function () {
 
         let updateAvailabe = await Updater.CheckForUpdates(updateOptions)
 
-        if (updateAvailabe == false) {
+        if (!updateAvailabe) {
             ipcRenderer.send("start_app")
         } else {
             Updater.Update(updateOptions)

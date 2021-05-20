@@ -67,6 +67,7 @@ function addSetting(name, value) {
 }
 
 function setSettings() {
+    isBack = false
     for (let key in settings) {
         if (settings.hasOwnProperty(key)) {
             addSetting(key, settings[key])
@@ -95,28 +96,32 @@ function setSettings() {
         })
     }
 
-    document.getElementById("darkmode").oninput = async () => {
-        if (document.getElementById("darkmode").checked) {
-            document.body.classList.remove("light")
-            document.getElementById("dark_warn").classList.remove("active")
-            console.log("light")
-            settings["darkmode"] = true
-            document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
-        } else {
-            document.getElementById("dark_warn").classList.add("active")
-            await waitForUserInput().then((data) => {
-                if (data == 1) {
-                    document.body.classList.add("light")
-                    document.getElementById("dark_warn").classList.remove("active")
-                    settings["darkmode"] = false
-                    document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
-                    console.log("light 2")
-                } else {
-                    document.getElementById("dark_warn").classList.remove("active")
-                    document.getElementById("darkmode").checked = true
-                }
-            })
+    try {
+        document.getElementById("darkmode").oninput = async () => {
+            if (document.getElementById("darkmode").checked) {
+                document.body.classList.remove("light")
+                document.getElementById("dark_warn").classList.remove("active")
+                console.log("light")
+                settings["darkmode"] = true
+                document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
+            } else {
+                document.getElementById("dark_warn").classList.add("active")
+                await waitForUserInput().then((data) => {
+                    if (data == 1) {
+                        document.body.classList.add("light")
+                        document.getElementById("dark_warn").classList.remove("active")
+                        settings["darkmode"] = false
+                        document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
+                        console.log("light 2")
+                    } else {
+                        document.getElementById("dark_warn").classList.remove("active")
+                        document.getElementById("darkmode").checked = true
+                    }
+                })
+            }
         }
+    } catch (err) {
+        throw err
     }
 
     timeall = settings["timer"][0][settings["timer"][1]]
@@ -124,27 +129,38 @@ function setSettings() {
     changeTime(timeall, 1)
     timewhite = timeall
     timeblack = timeall
-
-    document.getElementById("timer").oninput = () => {
-        animateValue(timeall, parseFloat(document.getElementById("timer").value), 400)
-        timeall = parseFloat(document.getElementById("timer").value)
-        timewhite = timeall
-        timeblack = timeall
-        settings["timer"][1] = settings["timer"][0].indexOf(parseFloat(document.getElementById("timer").value))
-        document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
+    try {
+        document.getElementById("timer").oninput = () => {
+            animateValue(timeall, parseFloat(document.getElementById("timer").value), 400)
+            timeall = parseFloat(document.getElementById("timer").value)
+            timewhite = timeall
+            timeblack = timeall
+            settings["timer"][1] = settings["timer"][0].indexOf(parseFloat(document.getElementById("timer").value))
+            document.getElementById("allSettingsString").innerHTML = JSON.stringify(settings)
+        }
+    } catch (err) {
+        throw err
     }
 
-    document.getElementById("filerank").addEventListener("input", () => {
-        console.log(document.getElementById("filerank").checked)
-        let opacity = document.getElementById("filerank").checked ? "1" : "0"
-        document.getElementById("filerankdisp").style = `opacity: ${opacity}`
-    })
+    try {
+        document.getElementById("filerank").addEventListener("input", () => {
+            console.log(document.getElementById("filerank").checked)
+            let opacity = document.getElementById("filerank").checked ? "1" : "0"
+            document.getElementById("filerankdisp").style = `opacity: ${opacity}`
+        })
+    } catch (err) {
+        throw err
+    }
 
-    document.getElementById("premoves").addEventListener("input", () => {
-        if (!settings.premoves) {
-            removePreMoves()
-        }
-    })
+    try {
+        document.getElementById("premoves").addEventListener("input", () => {
+            if (!settings.premoves) {
+                removePreMoves()
+            }
+        })
+    } catch (err) {
+        throw err
+    }
 
     setupBoard()
 

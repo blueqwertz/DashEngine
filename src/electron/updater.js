@@ -1,12 +1,7 @@
-////////////////////    IMPORTING    ////////////////////
-//#region IMPORTING
 const request = require("request")
 const fs = require("fs")
 const {ipcRenderer} = require("electron")
-//#endregion IMPORTING
 
-////////////////////    GLOBAL VARIABLES    ////////////////////
-//#region GLOBAL VARIABLES
 var app_library = (process.env.APPDATA || (process.platform == "darwin" ? process.env.HOME + "/Library/Preferences" : process.env.HOME + "/.local/share")) + "\\"
 
 var git_api
@@ -49,12 +44,7 @@ const defaultOptions = {
     allowDowngrade: false,
 }
 
-//#endregion GLOBAL VARIABLES
-
-////////////////////    INITIALIZATION    ////////////////////
-//#region INITIALIZATION
 /**
- * Tests if the Required Fields are Filled out
  * @param {defaultOptions} options
  */
 function testOptions(options) {
@@ -62,11 +52,9 @@ function testOptions(options) {
 }
 
 /**
- * Updates Global Variables based on the Provided Options
  * @param {defaultOptions} options
  */
 function setOptions(options) {
-    // Sets the Default Values
     options.useGithub = options.useGithub == null ? true : options.appDirectory
     options.forceUpdate = options.forceUpdate == null ? false : options.forceUpdate
     options.appDirectory = options.appDirectory == null ? app_library + options.appName : options.appDirectory
@@ -76,7 +64,6 @@ function setOptions(options) {
     options.stageTitles = options.stageTitles == null ? defaultOptions.stageTitles : options.stageTitles
     options.allowDowngrade = options.allowDowngrade == null ? defaultOptions.allowDowngrade : options.allowDowngrade
 
-    // Sets the Elements (if used)
     if (options.label !== null) dl_label = options.label
     if (options.progressBar !== null) dl_bar = options.progressBar
     if (options.useGithub) setupGitProtocol(options)
@@ -84,7 +71,6 @@ function setOptions(options) {
 }
 
 /**
- * Sets the Values for GitHub based on the Options Provieded.
  * @param {defaultOptions} options
  */
 function setupGitProtocol(options) {
@@ -93,7 +79,6 @@ function setupGitProtocol(options) {
 }
 
 /**
- * Creates the Required Directories for the Application to Run
  * @param {defaultOptions} options
  */
 
@@ -103,15 +88,9 @@ function createDirectories(options) {
     if (!fs.existsSync(require("path").dirname(options.versionFile))) fs.mkdirSync(require("path").dirname(options.versionFile), {recursive: true})
 }
 
-//#endregion INITIALIZATION
-
-////////////////////    VERSIONING    ////////////////////
-//#region VERSIONING
-
 /**
- * Gets the Direct Download URL From the GitHub API.
  * @param {defaultOptions} options
- * @returns {*} The Direct Download URL
+ * @returns {*}
  */
 async function GetUpdateURL(options) {
     return fetch(git_api)
@@ -121,10 +100,8 @@ async function GetUpdateURL(options) {
         })
         .catch((e) => {
             try {
-                // Electron
                 alert(`Something went wrong: ${e}`)
             } catch {
-                // NodeJS
                 console.error(`Something went wrong: ${e}`)
                 return
             }
@@ -138,9 +115,6 @@ async function GetUpdateURL(options) {
         })
 }
 
-/**
- * Gets the current relase version from GitHub
- */
 async function GetUpdateVersion() {
     return fetch(git_api)
         .then((response) => response.json())
@@ -149,10 +123,8 @@ async function GetUpdateVersion() {
         })
         .catch((e) => {
             try {
-                // Electron
                 alert(`Something went wrong: ${e}`)
             } catch {
-                // NodeJS
                 console.error(`Something went wrong: ${e}`)
                 return
             }
@@ -163,12 +135,10 @@ async function GetUpdateVersion() {
 }
 
 /**
- * Gets the Current Version from the File System
  * @param {defaultOptions} options
  */
 
 /**
- * Updates the Version File to Reflect the New Version
  * @param {defaultOptions} options
  */
 function UpdateCurrentVersion(options) {
@@ -178,25 +148,18 @@ function UpdateCurrentVersion(options) {
     }
     fs.writeFileSync(options.versionFile, JSON.stringify(version))
 }
-//#endregion VERSIONING
-
-////////////////////    LOGGING    ////////////////////
-//#region LOGGING
 
 /**
- * Updates the Progressbar, if any, and logs the percentage to console.
- * @param {number} rb - Bytes already Downloaded
- * @param {number} tb - Total Bytes to Download
+ * @param {number} rb
+ * @param {number} tb
  */
 function showProgress(rb, tb) {
-    // console.log(`${Math.floor((rb * 100) / tb)}% | ${rb} bytes of ${tb} bytes`);
     try {
         if (dl_bar !== null) dl_bar.setAttribute("value", (rb * 100) / tb)
     } catch {}
 }
 
 /**
- * Updates the Status Label, if any, and Logs the value.
  * @param {string} value
  */
 function updateHeader(value) {
@@ -206,13 +169,7 @@ function updateHeader(value) {
     } catch {}
 }
 
-//#endregion LOGGING
-
-////////////////////    STAGES    ////////////////////
-//#region STAGES
-
 /**
- * Updates the Application based on the Provided Options
  * @param {defaultOptions} options
  */
 async function Update(options = defaultOptions) {
@@ -232,11 +189,9 @@ async function Update(options = defaultOptions) {
         }
     } else {
         try {
-            // Electron
             alert(`Please Fill out the Options Fully`)
             window.close()
         } catch {
-            // NodeJS
             console.log(`Please Fill out the Options Fully`)
             return
         }
@@ -244,9 +199,8 @@ async function Update(options = defaultOptions) {
 }
 
 /**
- * Checks if there are any updates
  * @param {defaultOptions} options
- * @returns {*} true if an update is needed and false if not
+ * @returns {*}
  */
 async function CheckForUpdates(options = defaultOptions) {
     if (testOptions(options)) {
@@ -269,8 +223,8 @@ async function CheckForUpdates(options = defaultOptions) {
             const oldParts = oldVer.split(".")
             const newParts = newVer.split(".")
             for (var i = 0; i < newParts.length; i++) {
-                const a = ~~newParts[i] // parse int
-                const b = ~~oldParts[i] // parse int
+                const a = ~~newParts[i]
+                const b = ~~oldParts[i]
                 if (a > b) return true
                 if (a < b) return false
             }
@@ -289,8 +243,8 @@ async function CheckForUpdates(options = defaultOptions) {
 
 /**
  *
- * @param {string} url - Direct Download URL
- * @param {string} path - Temp Download Directory ex: /path/to/file.zip
+ * @param {string} url
+ * @param {string} path
  */
 function Download(url, path, options) {
     document.getElementById("bar").style.opacity = 1
@@ -320,7 +274,6 @@ function Download(url, path, options) {
     })
 }
 /**
- * Unzips the Downloaded Archive to the Application Directory
  * @param {defaultOptions} options
  */
 function Install(options) {
@@ -333,7 +286,6 @@ function Install(options) {
 }
 
 /**
- * Removes any Temp Directories and Files.
  * @param {defaultOptions} options
  */
 function CleanUp(options) {
@@ -343,7 +295,6 @@ function CleanUp(options) {
 }
 
 /**
- * Launches the Application
  * @param {defaultOptions} options
  */
 function LaunchApplication(options) {
@@ -366,19 +317,13 @@ function LaunchApplication(options) {
     }
     setTimeout(() => {
         try {
-            // Electron
             window.close()
         } catch (e) {
-            // NodeJS
             process.exit(0)
         }
     }, 1000)
 }
 
-//#endregion STAGES
-
-////////////////////    UTILITIES    ////////////////////
-//#region UTILITIES
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
@@ -386,6 +331,5 @@ function sleep(ms) {
 function GetAppLibrary() {
     return app_library
 }
-//#endregion
 
 module.exports = {Update, CheckForUpdates, GetAppLibrary}

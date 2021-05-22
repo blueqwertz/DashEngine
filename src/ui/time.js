@@ -143,5 +143,6 @@ function updateTime() {
         document.getElementById("timer").parentElement.classList.remove("inactive")
         timer = null
         gameOver = true
+        removePreMoves()
     }
 }

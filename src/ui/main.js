@@ -16,7 +16,6 @@ worker.addEventListener(
                 movesBack = []
                 setupBoard()
             }
-            console.log(e.data.move)
             curmoves = [e.data.move]
             if (e.data != null) {
                 makedisplaymove(0)

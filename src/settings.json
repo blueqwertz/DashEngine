@@ -7,17 +7,18 @@
             180,
             300,
             600,
+            1800,
             3600
         ],
-        0
+        5
     ],
     "premoves": true,
-    "usebook": false,
+    "usebook": true,
     "alpha_beta": true,
     "darkmode": true,
     "filerank": true,
     "ui": {
         "game_info": true,
-        "settings_info": true
+        "settings_info": false
     }
 }

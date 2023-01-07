@@ -9,7 +9,7 @@ class TranspositionTable {
     }
 
     store(hash, score, depth, flag) {
-        this.table[hash % this.tableSize] = {value: score, depth: depth, flag: flag}
+        this.table[hash % this.tableSize] = { value: score, depth: depth, flag: flag }
     }
 
     clear() {

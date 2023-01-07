@@ -10,7 +10,9 @@ async function Deepening(time, view = false) {
         }
         let [curBestMove, curScore] = Search(tempDepth, true, time - (Date.now() - start) - 10)
         if (curBestMove == null) {
-            return new Promise(resolve => {resolve(bestMove)})
+            return new Promise((resolve) => {
+                resolve(bestMove)
+            })
         }
         if (curScore > bestScore) {
             bestMove = curBestMove
@@ -29,7 +31,7 @@ async function Deepening(time, view = false) {
 
 function updateEvalDepthDisp(eval, depth) {
     return new Promise((resolve) => {
-        self.postMessage({"eval": Math.round((eval / 7) * -10) / 10, "depth": depth})
+        self.postMessage({ eval: Math.round((eval / 7) * -10) / 10, depth: depth })
         setTimeout(() => {
             resolve(1)
         }, 10)
@@ -85,7 +87,7 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
 
     var bestScore = negativeInfinity
     var bestMove
-    
+
     cutOffs = 0
 
     for (let move of moves) {
@@ -106,7 +108,6 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
         }
         bestScore = Math.max(bestScore, eval)
     }
-
 
     if (searchScore) {
         return [bestMove, bestScore]
@@ -142,8 +143,7 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
         return arr
     }
 
-    function minimax(depth, ismaximising, ) {
-
+    function minimax(depth, ismaximising) {
         if (depth == 0) {
             return Evaluate()
         }
@@ -203,7 +203,8 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
                 alpha = Math.max(alpha, ttEntry.value)
             } else if (ttEntry.flag == UPPERBOUND) {
                 beta = Math.min(beta, ttEntry.value)
-            } if (alpha >= beta) {
+            }
+            if (alpha >= beta) {
                 cutOffs++
                 return ttEntry.value
             }
@@ -319,7 +320,7 @@ function Search(depth = 1, searchScore = false, timeRemaining = 999999) {
 
         let nodes = orderMoves(movegenerator.generateMoves())
         let value = negativeInfinity
-        tryMoves : for (let move of nodes) {
+        tryMoves: for (let move of nodes) {
             board.makeMove(move)
             value = Math.max(value, -negamax(depth - 1, -beta, -alpha, -color))
             board.unmakeMove(move)
